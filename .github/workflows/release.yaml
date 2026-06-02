@@ -1,0 +1,27 @@
+name: Production Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    name: Versioning and Changelog Automation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment and install dependencies
+        uses: ./.github/actions/setup-monorepo
+
+      - name: Create release pull request or publish tags
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
