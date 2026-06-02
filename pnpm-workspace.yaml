@@ -3,3 +3,6 @@ packages:
   - 'apps/internal/*'
   - 'apps/clients/*'
   - 'packages/*'
+allowBuilds:
+  esbuild: true
+  sharp: true

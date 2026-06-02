@@ -19,6 +19,8 @@ export default [
       '**/.turbo/**',
       '**/build/**',
       '**/coverage/**',
+      '*.config.js',
+      '*.config.mjs',
     ],
   },
 
