@@ -1,0 +1,12 @@
+{
+  "name": "@sincroniza/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "base.json",
+  "files": [
+    "base.json",
+    "astro.json",
+    "react.json"
+  ]
+}

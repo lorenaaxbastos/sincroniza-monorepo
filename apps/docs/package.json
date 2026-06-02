@@ -1,0 +1,10 @@
+{
+  "name": "@sincroniza/docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Storybook dev placeholder'",
+    "build": "echo 'Storybook build placeholder'",
+    "lint": "echo 'Storybook lint placeholder'"
+  }
+}
