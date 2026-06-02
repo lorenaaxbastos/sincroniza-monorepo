@@ -8,7 +8,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.0",
@@ -16,6 +18,8 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@sincroniza/tsconfig": "workspace:*",
+    "@sincroniza/vitest-config": "workspace:*",
     "astro": "^5.0.0"
   }
 }
