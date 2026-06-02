@@ -1,4 +1,4 @@
-# Dependências
+# Dependencies
 node_modules
 .pnpm-store
 
@@ -9,14 +9,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Builds e Saídas de Compilação
+# Builds
 dist
 build
 .astro
 .turbo
 out
 
-# IDEs e Editores
+# IDEs
 .nvim
 .vscode
 .idea
@@ -26,7 +26,7 @@ out
 *.sln
 *.swp
 
-# Variáveis de Ambiente e Segredos
+# Variables
 .env
 .env.local
 .env.development.local
@@ -34,6 +34,6 @@ out
 .env.production.local
 *.pem
 
-# Sistema Operacional
+# OS
 .DS_Store
 Thumbs.db
