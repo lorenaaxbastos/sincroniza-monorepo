@@ -1,0 +1,12 @@
+{
+  "extends": "@sincroniza/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "include": [
+    "src/**/*",
+    ".storybook/**/*"
+  ]
+}
