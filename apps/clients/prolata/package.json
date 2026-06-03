@@ -14,12 +14,15 @@
   },
   "dependencies": {
     "@astrojs/react": "^5.0.0",
+    "@sincroniza/tokens": "workspace:*",
+    "@sincroniza/ui": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@sincroniza/tsconfig": "workspace:*",
     "@sincroniza/vitest-config": "workspace:*",
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "vitest": "^4.1.8"
   }
 }
