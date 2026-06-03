@@ -2,8 +2,8 @@ packages:
   - 'apps/*'
   - 'apps/internal/*'
   - 'apps/clients/*'
-  - 'packages/*'
   - 'packages/configs/*'
+  - 'packages/*'
 allowBuilds:
   esbuild: true
   sharp: true

@@ -205,7 +205,11 @@ importers:
 
   packages/configs/vitest: {}
 
-  packages/tokens: {}
+  packages/tokens:
+    devDependencies:
+      '@sincroniza/tsconfig':
+        specifier: workspace:*
+        version: link:../configs/tsconfig
 
   packages/ui:
     devDependencies:
