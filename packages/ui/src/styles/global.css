@@ -1,6 +1,9 @@
 @import './tokens.css';
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap');
 
 :root {
+  --font-family-base: 'Onest';
+
   --color-primary-light: color-mix(
     in srgb,
     var(--color-primary) 12%,
@@ -73,13 +76,7 @@ html {
 }
 
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
+  font-family: var(--font-family-base, system-ui, -apple-system, sans-serif);
   font-size: var(--font-size-md);
   line-height: var(--line-height-base);
   background-color: var(--color-bg-canvas);
