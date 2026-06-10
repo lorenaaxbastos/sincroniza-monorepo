@@ -92,7 +92,7 @@ export default [
 
   ...eslintPluginAstro.configs.recommended,
   {
-    files: ['**/*.astro'],
+    files: ['**/*.astro', '**/*.astro/*.ts'],
     languageOptions: {
       parser: astroParser,
       parserOptions: {
@@ -100,7 +100,9 @@ export default [
         extraFileExtensions: ['.astro'],
       },
     },
-    rules: {},
+    rules: {
+      ...tseslint.configs.disableTypeChecked.rules,
+    },
   },
 
   {
