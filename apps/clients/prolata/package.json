@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.0",
