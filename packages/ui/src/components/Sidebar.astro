@@ -1,0 +1,44 @@
+---
+interface Props {
+  isCollapsed?: boolean;
+  expandedWidth?: string;
+  collapsedWidth?: string;
+  backgroundColor?: string;
+  activeMenu?: string;
+}
+
+const {
+  isCollapsed = false,
+  expandedWidth = '26rem',
+  collapsedWidth = '8rem',
+  backgroundColor = 'var(--color-primary)',
+  activeMenu,
+} = Astro.props;
+---
+
+<div
+  class:list={['sinc-sidebar', { 'is-collapsed': isCollapsed }]}
+  style={{
+    '--expanded-width': expandedWidth,
+    '--collapsed-width': collapsedWidth,
+    '--sidebar-bg': backgroundColor,
+  }}
+  data-active-menu={activeMenu}
+>
+  <slot />
+</div>
+
+<style>
+  .sinc-sidebar {
+    width: var(--expanded-width);
+    background-color: var(--sidebar-bg);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-smooth);
+  }
+
+  .sinc-sidebar.is-collapsed {
+    width: var(--collapsed-width);
+  }
+</style>
