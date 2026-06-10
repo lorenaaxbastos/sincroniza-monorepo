@@ -1,0 +1,129 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  favicon?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  lang?: string;
+  theme?: 'light' | 'dark' | 'system';
+  googleAnalyticsId?: string;
+  handTalkToken?: string;
+}
+
+const {
+  title,
+  description,
+  favicon = '/favicon.svg',
+  googleAnalyticsId,
+  ogImage = '/og-default.jpg',
+  canonicalUrl = Astro.url.href,
+  lang = 'pt-BR',
+  theme = 'light',
+  handTalkToken,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="icon" type="image/svg+xml" href={favicon} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <script is:inline define:vars={{ defaultTheme: theme }}>
+      const getThemePreference = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+
+        if (defaultTheme === 'light' || defaultTheme === 'dark') {
+          return defaultTheme;
+        }
+
+        return window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+      };
+
+      const activeTheme = getThemePreference();
+      document.documentElement.setAttribute('data-theme', activeTheme);
+    </script>
+
+    {
+      googleAnalyticsId && (
+        <script
+          is:inline
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+        />
+      )
+    }
+
+    {
+      googleAnalyticsId && (
+        <script
+          is:inline
+          set:html={`
+            window.dataLayer = window.dataLayer || [];
+            function gtag()){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}');
+          `}
+        />
+      )
+    }
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main-content" class="sinc-sr-only --focusable"
+      >Pular para o conteúdo principal</a
+    >
+
+    <div id="app-root">
+      <slot />
+    </div>
+
+    {
+      handTalkToken && (
+        <script
+          is:inline
+          src="https://plugin.handtalk.me/web/latest/handtalk.min.js"
+        />
+      )
+    }
+
+    {
+      handTalkToken && (
+        <script
+          is:inline
+          set:html={`
+          var ht = new HT({
+            token: ${handTalkToken},
+            avatar: "MAYA",
+            pageSpeech: true
+          });
+        `}
+        />
+      )
+    }
+  </body>
+</html>
