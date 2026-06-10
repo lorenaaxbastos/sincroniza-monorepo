@@ -21,6 +21,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@sincroniza/tsconfig": "workspace:*",
     "@sincroniza/vitest-config": "workspace:*",
     "astro": "^5.0.0",
