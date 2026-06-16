@@ -1,11 +1,109 @@
 ---
+import Sidebar from '@sincroniza/ui/components/Sidebar.astro';
+import AppLayout from '@sincroniza/ui/layouts/AppLayout.astro';
 ---
-<html lang="pt-br">
-	<head>
-		<meta charset="utf-8" />
-		<title>Sincroniza - Projetos Temporário</title>
-	</head>
-	<body>
-		<h1>Esqueleto Projetos</h1>
-	</body>
-</html>
+
+<AppLayout
+  title="Painel de Controle - Prolata"
+  description="Área logada da plataforma Prolata"
+  ogImage="/og-dashboard.png"
+>
+  <Sidebar slot="sidebar" activeMenu="home">
+    <div class="brand-logo">
+      <h2>Sincroniza</h2>
+    </div>
+    <nav class="menu-links">
+      <a href="#" class="active" data-link-id="home">Início</a>
+      <a href="#" data-link-id="relatorios">Relatórios</a>
+      <a href="#" data-link-id="config">Configurações</a>
+    </nav>
+  </Sidebar>
+
+  <div class="dashboard-content">
+    <h1>Bem-vindo ao Novo App Shell</h1>
+    <p>O scroll desta área é totalmente independente do resto da tela!</p>
+
+    <div class="spacer-card">Card de Conteúdo Estrutural 1</div>
+    <div class="spacer-card">Card de Conteúdo Estrutural 2</div>
+    <div class="spacer-card">Card de Conteúdo Estrutural 3</div>
+  </div>
+
+  <div slot="footer" class="mock-footer">
+    <p>&copy; 2026 Sincroniza Educação - Painel de Engenharia v1.0.0</p>
+  </div>
+</AppLayout>
+
+<style>
+  .brand-logo {
+    padding: 1.5rem;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .menu-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-family: sans-serif;
+  }
+
+  .menu-links a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  .mock-topbar {
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: sans-serif;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #4f46e5;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  .dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    font-family: sans-serif;
+  }
+
+  .spacer-card {
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 15rem 2rem;
+    border-radius: 8px;
+    text-align: center;
+    color: #64748b;
+  }
+
+  .mock-footer {
+    background-color: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    font-family: sans-serif;
+  }
+</style>
