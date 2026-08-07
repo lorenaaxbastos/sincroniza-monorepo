@@ -1,0 +1,152 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type SpacingSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+type FlexDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse';
+type FlexAlign = 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
+type FlexJustify =
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
+
+export interface Props extends HTMLAttributes<'div'> {
+  as?: 'div' | 'section' | 'ul' | 'ol' | 'nav';
+
+  direction?: FlexDirection;
+  directionXl?: FlexDirection;
+  directionLg?: FlexDirection;
+  directionMd?: FlexDirection;
+  directionSm?: FlexDirection;
+
+  gap?: SpacingSize;
+  gapXl?: SpacingSize;
+  gapLg?: SpacingSize;
+  gapMd?: SpacingSize;
+  gapSm?: SpacingSize;
+
+  align?: FlexAlign;
+  justify?: FlexJustify;
+  wrap?: boolean | 'wrap' | 'nowrap' | 'wrap-reverse';
+}
+
+const {
+  as: Tag = 'div',
+  direction = 'row',
+  directionXl,
+  directionLg,
+  directionMd,
+  directionSm,
+  gap = 'md',
+  gapXl,
+  gapLg,
+  gapMd,
+  gapSm,
+  align = 'stretch',
+  justify = 'flex-start',
+  wrap = false,
+  class: className,
+  style,
+  ...rest
+} = Astro.props;
+
+const gapMap: Record<SpacingSize, string> = {
+  none: '0',
+  xs: 'var(--spacing-2)',
+  sm: 'var(--spacing-3)',
+  md: 'var(--spacing-4)',
+  lg: 'var(--spacing-6)',
+  xl: 'var(--spacing-8)',
+  xxl: 'var(--spacing-12)',
+};
+
+const wrapValue = typeof wrap === 'boolean' ? (wrap ? 'wrap' : 'nowrap') : wrap;
+
+const dynamicStyles = {
+  '--stack-dir': direction,
+  ...(directionXl && { '--stack-dir-xl': directionXl }),
+  ...(directionLg && { '--stack-dir-lg': directionLg }),
+  ...(directionMd && { '--stack-dir-md': directionMd }),
+  ...(directionSm && { '--stack-dir-sm': directionSm }),
+
+  '--stack-gap': gapMap[gap],
+  ...(gapXl && { '--stack-gap-xl': gapMap[gapXl] }),
+  ...(gapLg && { '--stack-gap-lg': gapMap[gapLg] }),
+  ...(gapMd && { '--stack-gap-md': gapMap[gapMd] }),
+  ...(gapSm && { '--stack-gap-sm': gapMap[gapSm] }),
+
+  '--stack-align': align,
+  '--stack-justify': justify,
+  '--stack-wrap': wrapValue,
+};
+---
+
+<Tag
+  class:list={['sinc-stack', className]}
+  style={[dynamicStyles, style]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .sinc-stack {
+    display: flex;
+    flex-direction: var(--stack-dir);
+    gap: var(--stack-gap);
+    align-items: var(--stack-align);
+    justify-content: var(--stack-justify);
+    flex-wrap: var(--stack-wrap);
+  }
+
+  @media (max-width: 80em) {
+    .sinc-stack {
+      flex-direction: var(--stack-dir-xl, var(--stack-dir));
+      gap: var(--stack-gap-xl, var(--stack-gap));
+    }
+  }
+
+  @media (max-width: 64em) {
+    .sinc-stack {
+      flex-direction: var(
+        --stack-dir-lg,
+        var(--stack-dir-xl, var(--stack-dir))
+      );
+      gap: var(--stack-gap-lg, var(--stack-gap-xl, var(--stack-gap)));
+    }
+  }
+
+  @media (max-width: 48em) {
+    .sinc-stack {
+      flex-direction: var(
+        --stack-dir-md,
+        var(--stack-dir-lg, var(--stack-dir-xl, var(--stack-dir)))
+      );
+      gap: var(
+        --stack-gap-md,
+        var(--stack-gap-lg, var(--stack-gap-xl, var(--stack-gap)))
+      );
+    }
+  }
+
+  @media (max-width: 36em) {
+    .sinc-stack {
+      flex-direction: var(
+        --stack-dir-sm,
+        var(
+          --stack-dir-md,
+          var(--stack-dir-lg, var(--stack-dir-xl, var(--stack-dir)))
+        )
+      );
+      gap: var(
+        --stack-gap-sm,
+        var(
+          --stack-gap-md,
+          var(--stack-gap-lg, var(--stack-gap-xl, var(--stack-gap)))
+        )
+      );
+    }
+  }
+</style>

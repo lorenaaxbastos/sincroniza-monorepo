@@ -1,0 +1,280 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Fundamentos/Raiz da aplicação" />
+
+# Document shell (`Page.astro` / `sincronizaHtmlPlugin`)
+
+O **document shell** é a casca HTML raiz da aplicação. Ele é responsável por renderizar a estrutura inicial do documento (`<html>`, `<head>`, `<body>`), gerenciar meta tags de SEO/OpenGraph, aplicar o script anti-flash de tema, injetar recursos globais de acessibilidade (Skip Link e HandTalk), o overlay global de modais e rastreamento (Google Analytics).
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## Onde utilizar cada solução?
+
+* **Astro (`apps/clients`, etc.):** Importe e utilize o componente `Page.astro` como a camada mais externa de todas as suas páginas.
+* **Vite / React / SPA (`apps/docs`, `apps/clients`, etc.):** Adicione o plugin `sincronizaHtmlPlugin` no arquivo `vite.config.ts` do seu projeto. Ele injetará automaticamente a mesma estrutura HTML, os scripts de tema, o overlay global e os skip-links no seu `index.html`.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+## 1. Tokens CSS da casca (customização)
+
+Estas variáveis CSS customizam os elementos visuais injetados no nível da raiz da página:
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valor padrão (fallback)</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr>
+      <td><code>--sinc-header-height</code></td>
+      <td><code>6.4rem</code></td>
+      <td>Altura padrão do cabeçalho (`Header`) da página no Desktop.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-header-height-mobile</code></td>
+      <td><code>4.8rem</code></td>
+      <td>Altura do cabeçalho no Mobile (usada por componentes internos como a `Sidebar`).</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-page-main-content-link-outline-color</code></td>
+      <td><code>var(--color-gray-200)</code></td>
+      <td>Cor de contorno (<em>outline</em>) do link de acessibilidade `Skip Link` quando focado via teclado.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-page-overlay-bg</code></td>
+      <td><code>color-mix(in srgb, var(--color-black) 50%, transparent)</code></td>
+      <td>Cor de fundo do overlay escuro global da página.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-page-overlay-blur</code></td>
+      <td><code>2px</code></td>
+      <td>Intensidade do desfoque (<em>backdrop-filter</em>) aplicado atrás do overlay global.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Sobrescrevendo no aplicativo
+
+Caso uma aplicação precise alterar a opacidade do overlay ou a cor do desfoque globalmente, adicione as variáveis no `global.css` do seu projeto:
+
+```css
+:root {
+  --sinc-page-overlay-bg: rgba(0, 0, 0, 0.7);
+  --sinc-page-overlay-blur: 4px;
+}
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 2. Componente `Page.astro` (para projetos Astro)
+
+No Astro, todas as páginas devem ser envelopadas pelo `Page.astro`.
+
+<div style={{marginBottom: '2rem'}}></div>
+
+### Tabela de props (`PageProps`)
+
+<table id="tabela-props" style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Tipo</th>
+      <th>Padrão</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>title</code></td>
+      <td><code>string</code></td>
+      <td><em>Obrigatório</em></td>
+      <td>Título da página exibido na aba do navegador e em buscadores.</td>
+    </tr>
+    <tr>
+      <td><code>description</code></td>
+      <td><code>string</code></td>
+      <td><em>Obrigatório</em></td>
+      <td>Descrição da página para SEO e meta tags de compartilhamento.</td>
+    </tr>
+    <tr>
+      <td><code>favicon</code></td>
+      <td><code>string</code></td>
+      <td><code>'/favicon.svg'</code></td>
+      <td>Caminho relativo para o ícone da aplicação.</td>
+    </tr>
+    <tr>
+      <td><code>ogImage</code></td>
+      <td><code>string</code></td>
+      <td><code>'/og-default.jpg'</code></td>
+      <td>Caminho da imagem utilizada ao compartilhar o link em redes sociais (OpenGraph).</td>
+    </tr>
+    <tr>
+      <td><code>canonicalUrl</code></td>
+      <td><code>string</code></td>
+      <td><code>Astro.url.href</code></td>
+      <td>URL canônica da página.</td>
+    </tr>
+    <tr>
+      <td><code>lang</code></td>
+      <td><code>string</code></td>
+      <td><code>'pt-BR'</code></td>
+      <td>Atributo de idioma inserido na tag <code>&lt;html&gt;</code>.</td>
+    </tr>
+    <tr>
+      <td><code>theme</code></td>
+      <td><code>'light' | 'dark' | 'system'</code></td>
+      <td><code>'light'</code></td>
+      <td>Tema inicial padrão caso o usuário não possua preferência salva no <code>localStorage</code>.</td>
+    </tr>
+    <tr>
+      <td><code>googleAnalyticsId</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>ID de acompanhamento do Google Analytics 4 (ex: <code>G-XXXXXXXXXX</code>). Opcional.</td>
+    </tr>
+    <tr>
+      <td><code>handTalkToken</code></td>
+      <td><code>string</code></td>
+      <td><code>undefined</code></td>
+      <td>Token de ativação do plugin de acessibilidade em Libras HandTalk. Opcional.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Exemplo de uso no Astro
+
+```astro
+---
+import Page from '@sincroniza/ui/layouts/Page.astro';
+import WebLayout from '@sincroniza/ui/layouts/WebLayout.astro';
+---
+
+<Page description="Plataforma de soluções educacionais" googleAnalyticsId="G-XYZ123456" handTalkToken="SEU_TOKEN_HANDTALK" title="Home - Sincroniza Educação">
+  <WebLayout>
+    <h1>Conteúdo Principal da Página</h1>
+  </WebLayout>
+</Page>
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 3. Plugin `sincronizaHtmlPlugin` (para projetos Vite / React)
+
+Em aplicações React ou SPAs construídas com Vite, não existe o contexto do Astro para renderizar `<html / head / body>`. Para garantir que a aplicação React receba exatamente os mesmos recursos globais, utilizamos o plugin do Vite do nosso pacote `@sincroniza/ui`. As props aceitas são as mesmas do `Page.astro`, mencionada anteriormente na [Tabela de props](#tabela-props).
+
+<div style={{marginBottom: '2rem'}}></div>
+
+### Configuração no `vite.config.ts`
+
+```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { sincronizaHtmlPlugin } from '@sincroniza/ui/plugins';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    sincronizaHtmlPlugin({
+      title: 'Painel de Gestão à Vista - Sincroniza Educação',
+      description: 'Área logada do Painel de Gestão à Vista',
+      googleAnalyticsId: 'G-XYZ123456',
+      handTalkToken: 'SEU_TOKEN_HANDTALK',
+    }),
+  ],
+});
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Importação do `global.css` no React
+
+Diferente do `Page.astro` (que importa o CSS automaticamente em projetos Astro), o `sincronizaHtmlPlugin` injeta o HTML e os scripts de tema, mas **não insere o CSS diretamente na página** para respeitar o pipeline do bundler do Vite e o HMR (Hot Module Replacement).
+
+Em projetos React, é **obrigatório** importar o CSS global manualmente no ponto de entrada da aplicação (`src/main.tsx` ou `src/App.tsx`):
+
+```tsx
+// src/main.tsx ou src/App.tsx
+import '@sincroniza/ui/styles/global.css';
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 4. Recursos e comportamentos globais injetados
+
+Tanto o `Page.astro` quanto o `sincronizaHtmlPlugin` injetam automaticamente os seguintes scripts e elementos na casca da aplicação:
+
+<div style={{marginBottom: '2rem'}}></div>
+
+### A. Script anti-flash de tema
+
+Para evitar o efeito indesejado de tela branca (flash) antes do carregamento do JavaScript da aplicação, um script inline síncrono é executado imediatamente no `<head>`.
+
+**Ordem de prioridade da escolha do tema:**
+
+* Valor salvo no `localStorage.getItem('theme')`.
+* Propriedade `defaultTheme` definida no projeto (`'light'` ou `'dark'`).
+* Preferência do sistema operacional (`window.matchMedia('(prefers-color-scheme: dark)')`).
+
+O resultado final é gravado diretamente no atributo `data-theme` da tag `<html>`: `<html data-theme="dark">`.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### B. Skip Link de acessibilidade
+
+O primeiro elemento do `<body>` é um link oculto focado em leitores de tela e navegação por teclado:
+
+```html
+<a href="#main-content" class="sinc-main-content-link sinc-sr-only --focusable">
+  Pular para o conteúdo principal
+</a>
+```
+
+Ao pressionar `Tab` logo após o carregamento da página, esse link torna-se visível, permitindo que o usuário salte direto para o `<main id="main-content">` sem precisar percorrer todo o menu de navegação.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### C. Overlay global (`.sinc-global-overlay`)
+
+Um elemento `<div>` fixo no fundo da tela (`z-index: var(--z-index-overlay)`) é injetado ao final do `<body>`:
+
+```html
+<div class="sinc-global-overlay" data-global-overlay aria-hidden="true"></div>
+```
+
+**Comportamento via CSS (`:has()`):**
+* Quando qualquer elemento na página ganha os atributos `[data-state="open"][data-overlay]`, o overlay global transiciona sua opacidade de `0` para `1`.
+* Se o elemento tiver `data-overlay="behind"`, o `z-index` do overlay se ajusta automaticamente para ficar atrás do elemento em destaque.
+
+**Listeners globais automáticos:**
+* **Clique no overlay:** Ao clicar na área escura do overlay, o script invoca `closeOpenElements()`, fechando modais/gavetas ativas.
+* **Tecla `Escape`:** Pressionar a tecla `Esc` no teclado fecha automaticamente qualquer elemento aberto na tela.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### D. Alternador de tema automático (`[data-theme-toggle]`)
+
+Qualquer botão na aplicação que possua o atributo `data-theme-toggle` é automaticamente mapeado pelo script global da casca:
+
+```html
+<button data-theme-toggle aria-label="Alternar tema">
+  Alternar Tema
+</button>
+```
+
+Ao ser clicado, o script alterna o atributo `data-theme` na tag `<html>` entre `'light'` e `'dark'`, persiste a escolha do usuário no `localStorage` e atualiza os atributos de acessibilidade `aria-pressed` e `data-active` no botão.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### E. Ferramentas opcionais de acessibilidade e analytics
+
+* **HandTalk (Libras):** Quando `handTalkToken` é fornecido, insere o widget da tradutora virtual MAYA no canto inferior da tela.
+* **Google Analytics:** Quando `googleAnalyticsId` é fornecido, insere a tag síncrona `gtag.js` e inicializa o rastreamento do GA4.

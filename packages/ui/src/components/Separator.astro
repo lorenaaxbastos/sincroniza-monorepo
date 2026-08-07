@@ -1,0 +1,184 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+  orientation?: 'horizontal' | 'vertical';
+  decorative?: boolean;
+  label?: string;
+  spacing?: 'none' | 'sm' | 'md' | 'lg';
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'quaternary'
+    | 'light'
+    | 'dark'
+    | 'white'
+    | 'black'
+    | 'surface';
+  size?: 'sm' | 'md' | 'lg' | number;
+}
+
+const {
+  orientation = 'horizontal',
+  decorative = true,
+  label,
+  spacing = 'md',
+  color = 'surface',
+  size = 'sm',
+  class: className,
+  style,
+  ...rest
+} = Astro.props;
+
+const sizeMap: Record<'sm' | 'md' | 'lg', string> = {
+  sm: '1px',
+  md: '2px',
+  lg: '4px',
+};
+
+const thickness =
+  typeof size === 'number' ? `${size}px` : sizeMap[size] || '1px';
+
+const hasContent = label || Astro.slots.has('default');
+const isHorizontal = orientation === 'horizontal';
+
+const ariaAttrs = decorative
+  ? { 'aria-hidden': 'true' as const }
+  : { role: 'separator' as const, 'aria-orientation': orientation };
+---
+
+<div
+  class:list={[
+    'sinc-separator',
+    `sinc-separator--${orientation}`,
+    `sinc-separator--spacing-${spacing}`,
+    color && `sinc-separator--${color}`,
+    { 'sinc-separator--with-content': isHorizontal && hasContent },
+    className,
+  ]}
+  style={[{ '--separator-thickness': thickness }, style]}
+  {...ariaAttrs}
+  {...rest}
+>
+  {
+    isHorizontal && hasContent && (
+      <span class="sinc-separator__label">
+        <slot>{label}</slot>
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .sinc-separator {
+    flex-shrink: 0;
+    background-color: var(--separator-color);
+
+    &.sinc-separator--primary {
+      --separator-color: var(--color-primary);
+    }
+
+    &.sinc-separator--secondary {
+      --separator-color: var(--color-secondary);
+    }
+
+    &.sinc-separator--tertiary {
+      --separator-color: var(--color-tertiary);
+    }
+
+    &.sinc-separator--quaternary {
+      --separator-color: var(--color-quaternary);
+    }
+
+    &.sinc-separator--light {
+      --separator-color: var(--color-gray-100);
+    }
+
+    &.sinc-separator--dark {
+      --separator-color: var(--color-gray-600);
+    }
+
+    &.sinc-separator--white {
+      --separator-color: var(--color-white);
+    }
+
+    &.sinc-separator--black {
+      --separator-color: var(--color-black);
+    }
+
+    &.sinc-separator--surface {
+      --separator-color: var(--color-gray-300);
+    }
+
+    &.sinc-separator--horizontal {
+      width: 100%;
+      height: var(--separator-thickness, 1px);
+
+      &.sinc-separator--spacing-none {
+        margin-block: 0;
+      }
+
+      &.sinc-separator--spacing-sm {
+        margin-block: var(--spacing-2);
+      }
+
+      &.sinc-separator--spacing-md {
+        margin-block: var(--spacing-4);
+      }
+
+      &.sinc-separator--spacing-lg {
+        margin-block: var(--spacing-6);
+      }
+    }
+
+    &.sinc-separator--vertical {
+      width: var(--separator-thickness, 1px);
+      height: auto;
+      min-height: 1rem;
+      align-self: stretch;
+
+      &.sinc-separator--spacing-none {
+        margin-inline: 0;
+      }
+
+      &.sinc-separator--spacing-sm {
+        margin-inline: var(--spacing-2);
+      }
+
+      &.sinc-separator--spacing-md {
+        margin-inline: var(--spacing-4);
+      }
+
+      &.sinc-separator--spacing-lg {
+        margin-inline: var(--spacing-6);
+      }
+    }
+
+    &.sinc-separator--with-content {
+      height: auto;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      text-align: center;
+
+      &::before,
+      &::after {
+        content: '';
+        flex: 1;
+        height: var(--separator-thickness, 1px);
+        background-color: var(--separator-color);
+      }
+
+      .sinc-separator__label {
+        padding-inline: var(--spacing-3);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+    }
+  }
+</style>

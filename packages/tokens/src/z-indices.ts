@@ -1,9 +1,12 @@
 export const zIndices = {
   base: '0',
-  sidebar: '100',
-  sticky: '200',
-  fixed: '300',
-  modal: '400',
-  popover: '500',
-  tooltip: '600',
+  sticky: '100',
+  fixed: '200',
+  sidebar: '300',
+  overlay: '400',
+  modal: '500',
+  popover: '600',
+  tooltip: '700',
+  toast: '800',
+  alert: '900',
 } as const;

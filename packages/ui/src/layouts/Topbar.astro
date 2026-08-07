@@ -1,0 +1,112 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import MobileNavToggle from '../components/MobileNavToggle.astro';
+import Stack from './Stack.astro';
+
+export interface Props extends HTMLAttributes<'div'> {
+  bordered?: boolean;
+  showMobileMenu?: boolean;
+  sidebarSelector?: string;
+}
+
+const {
+  bordered = true,
+  showMobileMenu = true,
+  sidebarSelector = '.sinc-sidebar',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const hasCenter = Astro.slots.has('center');
+---
+
+<Stack
+  direction="row"
+  align="center"
+  justify="space-between"
+  class:list={['sinc-topbar', { 'is-bordered': bordered }, className]}
+  {...rest}
+>
+  <Stack direction="row" align="center" gap="sm" class="sinc-topbar-start">
+    {
+      showMobileMenu && (
+        <div class="sinc-topbar-mobile-toggle-wrapper">
+          <MobileNavToggle targetSelector={sidebarSelector} />
+        </div>
+      )
+    }
+    <slot name="start" />
+  </Stack>
+
+  {
+    hasCenter && (
+      <Stack
+        direction="row"
+        align="center"
+        justify="center"
+        class="sinc-topbar-center"
+      >
+        <slot name="center" />
+      </Stack>
+    )
+  }
+
+  <Stack
+    direction="row"
+    align="center"
+    justify="flex-end"
+    gap="sm"
+    class="sinc-topbar-end"
+  >
+    <slot name="end" />
+  </Stack>
+</Stack>
+
+<style>
+  .sinc-topbar {
+    position: relative;
+    width: 100%;
+    height: var(--sinc-topbar-height);
+    padding: 0 var(--spacing-6);
+    background-color: var(--color-bg-header);
+    transition:
+      background-color var(--transition-base),
+      border-color var(--transition-base);
+
+    &.is-bordered {
+      border-bottom: 1px solid var(--color-gray-300);
+    }
+
+    @media (max-width: 36em) {
+      padding: 0 var(--spacing-4);
+      z-index: var(--z-index-fixed);
+    }
+  }
+
+  .sinc-topbar-start {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sinc-topbar-center {
+    flex-shrink: 0;
+    max-width: 48rem;
+
+    @media (max-width: 36em) {
+      display: none !important;
+    }
+  }
+
+  .sinc-topbar-end {
+    flex: 1;
+  }
+
+  .sinc-topbar-mobile-toggle-wrapper {
+    display: none;
+    flex-shrink: 0;
+
+    @media (max-width: 36em) {
+      display: inline-flex;
+    }
+  }
+</style>

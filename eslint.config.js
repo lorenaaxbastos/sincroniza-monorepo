@@ -91,13 +91,28 @@ export default [
   },
 
   ...eslintPluginAstro.configs.recommended,
+
   {
-    files: ['**/*.astro', '**/*.astro/*.ts'],
+    files: ['**/*.astro'],
     languageOptions: {
       parser: astroParser,
       parserOptions: {
         parser: tseslint.parser,
         extraFileExtensions: ['.astro'],
+        project: null,
+      },
+    },
+    rules: {
+      ...tseslint.configs.disableTypeChecked.rules,
+    },
+  },
+
+  {
+    files: ['**/*.astro/*.js', '**/*.astro/*.ts'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: null,
       },
     },
     rules: {

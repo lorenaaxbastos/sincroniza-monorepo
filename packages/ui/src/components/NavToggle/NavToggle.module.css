@@ -1,0 +1,19 @@
+.iconClose {
+  display: none;
+}
+
+.iconMenu {
+  display: block;
+}
+
+.toggle {
+  &[data-active='true'] {
+    .iconClose {
+      display: block;
+    }
+
+    .iconMenu {
+      display: none;
+    }
+  }
+}

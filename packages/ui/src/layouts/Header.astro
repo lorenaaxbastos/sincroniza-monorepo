@@ -1,0 +1,246 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import MobileNavToggle from '../components/MobileNavToggle.astro';
+import Container from './Container.astro';
+import Stack from './Stack.astro';
+
+export interface Props extends HTMLAttributes<'div'> {
+  bordered?: boolean;
+  transparent?: boolean;
+  position?: 'static' | 'fixed';
+  showMobileMenu?: boolean;
+  mobileMenuId?: string;
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full';
+}
+
+const {
+  bordered = true,
+  transparent = false,
+  position = 'static',
+  showMobileMenu = true,
+  mobileMenuId = 'sinc-web-mobile-menu',
+  containerSize = 'xl',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const hasCenter = Astro.slots.has('center');
+
+const needsSpacer = position === 'fixed' && !transparent;
+---
+
+{needsSpacer && <div class="sinc-header-spacer" aria-hidden="true" />}
+
+<div
+  class:list={[
+    'sinc-header',
+    `sinc-header--${position}`,
+    { 'is-bordered': bordered },
+    { 'is-transparent': transparent },
+    className,
+  ]}
+  data-header-transparent={transparent}
+  {...rest}
+>
+  <Container size={containerSize}>
+    <Stack
+      direction="row"
+      align="center"
+      justify="space-between"
+      gap="sm"
+      class="sinc-header-wrapper"
+    >
+      <Stack direction="row" align="center" gap="sm" class="sinc-header-start">
+        <slot name="start" />
+      </Stack>
+
+      {
+        hasCenter && (
+          <Stack
+            direction="row"
+            align="center"
+            justify="center"
+            class="sinc-header-center"
+          >
+            <slot name="center" />
+          </Stack>
+        )
+      }
+
+      <Stack
+        direction="row"
+        align="center"
+        justify="flex-end"
+        gap="xs"
+        class="sinc-header-end"
+      >
+        <slot name="end" />
+
+        {
+          showMobileMenu && (
+            <div class="sinc-header-mobile-toggle-wrapper">
+              <MobileNavToggle targetSelector={`#${mobileMenuId}`} />
+            </div>
+          )
+        }
+      </Stack>
+    </Stack>
+  </Container>
+
+  {
+    showMobileMenu && (
+      <div
+        id={mobileMenuId}
+        class="sinc-header-drawer"
+        data-state="closed"
+        data-scroll-lock
+      >
+        <Container size={containerSize}>
+          <Stack
+            direction="column"
+            justify="center"
+            gap="lg"
+            class="sinc-header-drawer-content"
+          >
+            <slot name="mobile-menu">
+              <slot name="center" />
+            </slot>
+          </Stack>
+        </Container>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  function initHeaderScroll() {
+    const transparentHeaders = document.querySelectorAll<HTMLElement>(
+      '.sinc-header[data-header-transparent="true"]',
+    );
+
+    transparentHeaders.forEach((header) => {
+      const handleScroll = () => {
+        const isScrolled = window.scrollY > 20;
+        header.classList.toggle('is-scrolled', isScrolled);
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initHeaderScroll);
+  document.addEventListener('astro:page-load', initHeaderScroll);
+</script>
+
+<style>
+  .sinc-header-spacer {
+    height: var(--sinc-header-height);
+    width: 100%;
+  }
+
+  .sinc-header {
+    width: 100%;
+    background-color: var(--color-bg-header);
+    z-index: var(--z-index-fixed);
+    transition:
+      background-color var(--transition-base),
+      border-color var(--transition-base),
+      box-shadow var(--transition-base);
+
+    &.sinc-header--static {
+      position: static;
+    }
+
+    &.sinc-header--fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    &.is-bordered {
+      border-bottom: 1px solid var(--color-gray-300);
+    }
+
+    &.is-transparent {
+      background-color: transparent;
+      border-bottom-color: transparent;
+
+      &.is-scrolled {
+        background-color: var(--color-bg-header);
+
+        &.is-bordered {
+          border-bottom-color: var(--color-gray-300);
+        }
+      }
+    }
+  }
+
+  .sinc-header-wrapper {
+    height: var(--sinc-header-height);
+    position: relative;
+    z-index: var(--z-index-fixed);
+  }
+
+  .sinc-header-start {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sinc-header-center {
+    flex-shrink: 0;
+
+    @media (max-width: 48em) {
+      display: none !important;
+    }
+  }
+
+  .sinc-header-end {
+    flex: 1;
+  }
+
+  .sinc-header-mobile-toggle-wrapper {
+    display: none;
+    flex-shrink: 0;
+
+    @media (max-width: 48em) {
+      display: inline-flex;
+    }
+  }
+
+  .sinc-header-drawer {
+    display: none;
+
+    @media (max-width: 48em) {
+      display: block;
+      position: fixed;
+      top: var(--sinc-header-height);
+      left: 0;
+      width: 100%;
+      height: calc(100dvh - var(--sinc-header-height));
+      background-color: var(--color-bg-header-drawer);
+      z-index: var(--z-index-fixed);
+      overflow-y: auto;
+
+      transform: translateY(-1rem);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        transform var(--transition-smooth),
+        opacity var(--transition-smooth),
+        visibility var(--transition-smooth);
+
+      &[data-state='open'] {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .sinc-header-drawer-content {
+    min-height: calc(100dvh - var(--sinc-header-height));
+    padding: var(--spacing-8) 0;
+  }
+</style>

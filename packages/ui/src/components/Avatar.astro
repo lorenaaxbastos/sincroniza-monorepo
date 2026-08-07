@@ -1,0 +1,229 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { UserRound } from 'lucide-react';
+
+export interface Props extends HTMLAttributes<'div'> {
+  src?: string;
+  alt?: string;
+  name?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'circle' | 'square';
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'quaternary'
+    | 'light'
+    | 'dark'
+    | 'white'
+    | 'black'
+    | 'surface';
+  status?: 'online' | 'offline' | 'busy' | 'away';
+}
+
+const {
+  src,
+  alt,
+  name,
+  size = 'md',
+  variant = 'circle',
+  color = 'primary',
+  status,
+  class: className,
+  ...rest
+} = Astro.props;
+
+function getInitials(fullName?: string): string {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+const initials = getInitials(name);
+const avatarAlt = alt || (name ? `Avatar de ${name}` : 'Avatar do usuário');
+---
+
+<div
+  class:list={[
+    'sinc-avatar',
+    `sinc-avatar--${size}`,
+    `sinc-avatar--${variant}`,
+    `sinc-avatar--${color}`,
+    className,
+  ]}
+  {...rest}
+>
+  {
+    src ? (
+      <img
+        src={src}
+        alt={avatarAlt}
+        class="sinc-avatar__image"
+        loading="lazy"
+      />
+    ) : initials ? (
+      <span class="sinc-avatar__initials" aria-label={avatarAlt}>
+        {initials}
+      </span>
+    ) : (
+      <UserRound
+        className="sinc-avatar__fallback-icon"
+        size={30}
+        aria-label={avatarAlt}
+        role="img"
+      />
+    )
+  }
+
+  {
+    status && (
+      <span
+        class:list={['sinc-avatar__status', `is-${status}`]}
+        aria-hidden="true"
+      />
+    )
+  }
+</div>
+
+<style>
+  .sinc-avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    user-select: none;
+    font-weight: var(--font-weight-semibold, 600);
+    line-height: 1;
+
+    &.sinc-avatar--xs {
+      width: 2.4rem;
+      height: 2.4rem;
+      font-size: var(--font-size-xs);
+    }
+
+    &.sinc-avatar--sm {
+      width: 3.2rem;
+      height: 3.2rem;
+      font-size: var(--font-size-sm);
+    }
+
+    &.sinc-avatar--md {
+      width: 4rem;
+      height: 4rem;
+      font-size: var(--font-size-md);
+    }
+
+    &.sinc-avatar--lg {
+      width: 4.8rem;
+      height: 4.8rem;
+      font-size: var(--font-size-lg);
+    }
+
+    &.sinc-avatar--xl {
+      width: 6.4rem;
+      height: 6.4rem;
+      font-size: var(--font-size-xl);
+    }
+
+    &.sinc-avatar--circle {
+      border-radius: var(--radii-round);
+    }
+
+    &.sinc-avatar--square {
+      border-radius: var(--radii-md);
+    }
+
+    &.sinc-avatar--primary {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    &.sinc-avatar--secondary {
+      background-color: var(--color-secondary);
+      color: var(--color-white);
+    }
+
+    &.sinc-avatar--tertiary {
+      background-color: var(--color-tertiary);
+      color: var(--color-white);
+    }
+
+    &.sinc-avatar--quaternary {
+      background-color: var(--color-quaternary);
+      color: var(--color-white);
+    }
+
+    &.sinc-avatar--light {
+      background-color: var(--color-gray-100);
+      color: var(--color-gray-900);
+    }
+
+    &.sinc-avatar--dark {
+      background-color: var(--color-gray-900);
+      color: var(--color-gray-100);
+    }
+
+    &.sinc-avatar--white {
+      background-color: var(--color-white);
+      color: var(--color-black);
+    }
+
+    &.sinc-avatar--black {
+      background-color: var(--color-black);
+      color: var(--color-white);
+    }
+
+    &.sinc-avatar--surface {
+      background-color: var(--color-gray-400);
+      color: var(--color-gray-700);
+    }
+
+    .sinc-avatar__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+
+    .sinc-avatar__initials {
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .sinc-avatar__fallback-icon {
+      width: 65%;
+      height: 65%;
+      opacity: 0.85;
+    }
+
+    .sinc-avatar__status {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 28%;
+      height: 28%;
+      min-width: 8px;
+      min-height: 8px;
+      border-radius: 50%;
+      border: 2px solid var(--color-bg-header);
+
+      &.is-online {
+        background-color: var(--color-feedback-success);
+      }
+
+      &.is-offline {
+        background-color: var(--color-gray-600);
+      }
+
+      &.is-busy {
+        background-color: var(--color-feedback-error);
+      }
+
+      &.is-away {
+        background-color: var(--color-feedback-warning);
+      }
+    }
+  }
+</style>

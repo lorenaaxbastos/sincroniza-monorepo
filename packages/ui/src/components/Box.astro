@@ -1,0 +1,319 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type SpacingSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type ColorOption =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'quaternary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info'
+  | 'light'
+  | 'dark'
+  | 'white'
+  | 'black'
+  | 'surface';
+
+export interface Props extends HTMLAttributes<'div'> {
+  as?: 'div' | 'article' | 'fieldset';
+  variant?: 'solid' | 'subtle' | 'outline';
+  color?: ColorOption;
+  border?: boolean;
+  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'pill';
+  shadow?: 'none' | 'sm' | 'md' | 'lg';
+  padding?: SpacingSize;
+  paddingBlock?: SpacingSize;
+  paddingInline?: SpacingSize;
+}
+
+const {
+  as: Tag = 'div',
+  variant = 'solid',
+  color = 'surface',
+  border = false,
+  radius = 'md',
+  shadow = 'none',
+  padding = 'md',
+  paddingBlock,
+  paddingInline,
+  class: className,
+  style,
+  ...rest
+} = Astro.props;
+---
+
+<Tag
+  class:list={[
+    'sinc-box',
+    `sinc-box--${variant}`,
+    `sinc-box--${color}`,
+    `sinc-box--radius-${radius}`,
+    `sinc-box--shadow-${shadow}`,
+    `sinc-box--p-${padding}`,
+    { 'sinc-box--has-border': border },
+    paddingBlock && `sinc-box--py-${paddingBlock}`,
+    paddingInline && `sinc-box--px-${paddingInline}`,
+    className,
+  ]}
+  style={style}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .sinc-box {
+    position: relative;
+    box-sizing: border-box;
+
+    &.sinc-box--primary {
+      --box-color: var(--color-primary);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--secondary {
+      --box-color: var(--color-secondary);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--tertiary {
+      --box-color: var(--color-tertiary);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--quaternary {
+      --box-color: var(--color-quaternary);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--success {
+      --box-color: var(--color-feedback-success);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--warning {
+      --box-color: var(--color-feedback-warning);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--error {
+      --box-color: var(--color-feedback-error);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--info {
+      --box-color: var(--color-feedback-info);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--light {
+      --box-color: var(--color-gray-100);
+      --box-text: var(--color-gray-900);
+    }
+
+    &.sinc-box--dark {
+      --box-color: var(--color-gray-900);
+      --box-text: var(--color-gray-100);
+    }
+
+    &.sinc-box--white {
+      --box-color: var(--color-white);
+      --box-text: var(--color-black);
+    }
+
+    &.sinc-box--black {
+      --box-color: var(--color-black);
+      --box-text: var(--color-white);
+    }
+
+    &.sinc-box--surface {
+      --box-color: var(--color-gray-400);
+      --box-text: var(--color-gray-700);
+    }
+
+    &.sinc-box--solid {
+      background-color: var(--box-color);
+      color: var(--box-text);
+
+      &.sinc-box--has-border {
+        border: 1px solid var(--color-gray-200);
+      }
+    }
+
+    &.sinc-box--outline {
+      background-color: transparent;
+      border: 1px solid var(--box-color);
+      color: var(--box-color);
+
+      &.sinc-box--surface {
+        border-color: var(--color-gray-400);
+        color: var(--color-gray-700);
+      }
+    }
+
+    &.sinc-box--subtle {
+      background-color: color-mix(in srgb, var(--box-color), transparent 88%);
+      color: var(--box-color);
+
+      &.sinc-box--has-border {
+        border: 1px solid color-mix(in srgb, var(--box-color), transparent 70%);
+      }
+
+      &.sinc-box--surface {
+        background-color: var(--color-gray-100);
+        color: var(--color-text-body);
+      }
+
+      &.sinc-box--light {
+        background-color: var(--color-gray-100);
+        color: var(--color-gray-800);
+      }
+
+      &.sinc-box--white {
+        background-color: color-mix(
+          in srgb,
+          var(--color-white),
+          transparent 90%
+        );
+        color: var(--color-white);
+      }
+
+      &.sinc-box--black {
+        background-color: color-mix(
+          in srgb,
+          var(--color-black),
+          transparent 90%
+        );
+        color: var(--color-black);
+      }
+    }
+
+    &.sinc-box--radius-none {
+      border-radius: 0;
+    }
+
+    &.sinc-box--radius-sm {
+      border-radius: var(--radii-sm);
+    }
+
+    &.sinc-box--radius-md {
+      border-radius: var(--radii-md);
+    }
+
+    &.sinc-box--radius-lg {
+      border-radius: var(--radii-lg);
+    }
+
+    &.sinc-box--radius-xl {
+      border-radius: var(--radii-xl);
+    }
+
+    &.sinc-box--radius-xxl {
+      border-radius: var(--radii-xxl);
+    }
+
+    &.sinc-box--radius-pill {
+      border-radius: var(--radii-pill);
+    }
+
+    &.sinc-box--shadow-none {
+      box-shadow: none;
+    }
+
+    &.sinc-box--shadow-sm {
+      box-shadow: 0 0.1rem 0.2rem 0
+        color-mix(in srgb, var(--color-gray-900), transparent 95%);
+    }
+
+    &.sinc-box--shadow-md {
+      box-shadow:
+        0 0.4rem 0.6rem -0.1rem
+          color-mix(in srgb, var(--color-gray-900), transparent 90%),
+        0 0.2rem 0.4rem -0.1rem
+          color-mix(in srgb, var(--color-gray-900), transparent 95%);
+    }
+
+    &.sinc-box--shadow-lg {
+      box-shadow:
+        0 1rem 1.5rem -0.3rem
+          color-mix(in srgb, var(--color-gray-900), transparent 90%),
+        0 0.4rem 0.6rem -0.2rem
+          color-mix(in srgb, var(--color-gray-900), transparent 95%);
+    }
+
+    &.sinc-box--p-none {
+      padding: 0;
+    }
+
+    &.sinc-box--p-xs {
+      padding: var(--spacing-2);
+    }
+
+    &.sinc-box--p-sm {
+      padding: var(--spacing-3);
+    }
+
+    &.sinc-box--p-md {
+      padding: var(--spacing-4);
+    }
+
+    &.sinc-box--p-lg {
+      padding: var(--spacing-6);
+    }
+
+    &.sinc-box--p-xl {
+      padding: var(--spacing-8);
+    }
+
+    &.sinc-box--py-none {
+      padding-block: 0;
+    }
+
+    &.sinc-box--py-xs {
+      padding-block: var(--spacing-2);
+    }
+
+    &.sinc-box--py-sm {
+      padding-block: var(--spacing-3);
+    }
+
+    &.sinc-box--py-md {
+      padding-block: var(--spacing-4);
+    }
+
+    &.sinc-box--py-lg {
+      padding-block: var(--spacing-6);
+    }
+
+    &.sinc-box--py-xl {
+      padding-block: var(--spacing-8);
+    }
+
+    &.sinc-box--px-none {
+      padding-inline: 0;
+    }
+
+    &.sinc-box--px-xs {
+      padding-inline: var(--spacing-2);
+    }
+
+    &.sinc-box--px-sm {
+      padding-inline: var(--spacing-3);
+    }
+
+    &.sinc-box--px-md {
+      padding-inline: var(--spacing-4);
+    }
+
+    &.sinc-box--px-lg {
+      padding-inline: var(--spacing-6);
+    }
+
+    &.sinc-box--px-xl {
+      padding-inline: var(--spacing-8);
+    }
+  }
+</style>

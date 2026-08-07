@@ -1,0 +1,100 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Stack from '../layouts/Stack.astro';
+
+type SpacingSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
+export interface Props extends HTMLAttributes<'div'> {
+  title?: string;
+  direction?: 'column' | 'row';
+  gap?: SpacingSize;
+  align?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
+  justify?:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'space-evenly';
+  color?: 'light' | 'dark' | 'white' | 'black' | 'surface';
+}
+
+const {
+  title,
+  direction = 'column',
+  gap,
+  align,
+  justify,
+  color = 'white',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const isRow = direction === 'row';
+
+const defaultGap = gap || (isRow ? 'md' : 'xs');
+const defaultAlign = align || (isRow ? 'center' : 'stretch');
+const defaultJustify = justify || (isRow ? 'center' : 'flex-start');
+---
+
+<Stack
+  as="div"
+  direction="column"
+  gap="lg"
+  class:list={['sinc-nav-group', `sinc-nav-group--color-${color}`, className]}
+  {...rest}
+>
+  {title && <span class="sinc-nav-group-title">{title}</span>}
+
+  <Stack
+    as="ul"
+    role="list"
+    direction={direction}
+    gap={defaultGap}
+    align={defaultAlign}
+    justify={defaultJustify}
+    wrap={isRow ? 'wrap' : 'nowrap'}
+    class="sinc-nav-group-list"
+  >
+    <slot />
+  </Stack>
+</Stack>
+
+<style>
+  .sinc-nav-group {
+    &.sinc-nav-group--color-light {
+      --sinc-nav-group-title-color: var(--color-gray-100);
+    }
+
+    &.sinc-nav-group--color-dark {
+      --sinc-nav-group-title-color: var(--color-gray-900);
+    }
+
+    &.sinc-nav-group--color-white {
+      --sinc-nav-group-title-color: var(--color-white);
+    }
+
+    &.sinc-nav-group--color-black {
+      --sinc-nav-group-title-color: var(--color-black);
+    }
+
+    &.sinc-nav-group--color-surface {
+      --sinc-nav-group-title-color: var(--color-gray-500);
+    }
+  }
+
+  .sinc-nav-group-title {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sinc-nav-group-title-color);
+    border-bottom: 1px solid color-mix(in srgb, currentColor, transparent 50%);
+    padding: var(--spacing-1) 0;
+    white-space: nowrap;
+
+    @container sidebar (max-width: 6rem) {
+      display: none;
+    }
+  }
+</style>

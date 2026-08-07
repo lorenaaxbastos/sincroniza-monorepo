@@ -1,0 +1,47 @@
+.shell {
+  --_bg-color: var(--sinc-app-layout-bg, var(--color-bg-canvas));
+  --sinc-topbar-height: 6.4rem;
+  --sinc-topbar-height-mobile: 4.8rem;
+
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--_bg-color);
+}
+
+.sidebar {
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.topbar,
+.footer {
+  flex-shrink: 0;
+}
+
+.main {
+  --_main-padding: var(--sinc-app-layout-main-padding, var(--spacing-6));
+  --_main-padding-mobile: var(
+    --sinc-app-layout-main-padding-mobile,
+    var(--spacing-4)
+  );
+
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--_main-padding);
+
+  @media (max-width: 48em) {
+    padding: var(--_main-padding-mobile);
+  }
+}

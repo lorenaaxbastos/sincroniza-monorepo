@@ -20,7 +20,6 @@ export const grayColors = {
 } as const;
 
 export const darkGrayColors = {
-  white: '#000000',
   100: '#121214',
   200: '#1a1a1e',
   300: '#29292e',
@@ -30,7 +29,6 @@ export const darkGrayColors = {
   700: '#8d8d99',
   800: '#c4c4cc',
   900: '#e1e1e6',
-  black: '#ffffff',
 } as const;
 
 export const feedbackColors = {

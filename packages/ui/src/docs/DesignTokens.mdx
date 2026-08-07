@@ -1,0 +1,711 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Fundamentos/Design tokens e estilos globais" />
+
+# Design tokens
+
+Estes tokens são gerados automaticamente a partir do `@sincroniza/tokens` e disponibilizados em `tokens.css` e `global.css`. Eles garantem a consistência visual de cores, espaçamentos, tipografia e elevação em todos os projetos. Podem ser sobreescritos por projetos, garantindo a IDV adequada para cada cliente.
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 1. Cores semânticas e primitivas
+
+Há dois temas para escolha: `light` (padrão) e `dark`.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Cores de marca e feedback
+
+As variantes `-light` e `-dark` têm suas cores invertidas no tema `dark`.
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valor padrão</th>
+      <th>Variante `-light`</th>
+      <th>Variante `-dark`</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--color-primary</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#4a50c6', color: '#fff'}}>#4a50c6</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #4a50c6, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #4a50c6, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Cor principal da marca, botões de ação primária e destaques.</td>
+    </tr>
+    <tr>
+      <td><code>--color-secondary</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#39b4af', color: '#fff'}}>#39b4af</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #39b4af, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #39b4af, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Ações secundárias, acentos visuais e elementos de apoio.</td>
+    </tr>
+    <tr>
+      <td><code>--color-tertiary</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#ff526b', color: '#fff'}}>#ff526b</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #ff526b, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #ff526b, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Acentos terciários e badges de destaque.</td>
+    </tr>
+    <tr>
+      <td><code>--color-quaternary</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#dea24f', color: '#fff'}}>#dea24f</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #dea24f, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #dea24f, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Acentos quaternários (uso moderado).</td>
+    </tr>
+    <tr>
+      <td><code>--color-feedback-success</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#2e7d32', color: '#fff'}}>#2e7d32</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #2e7d32, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #2e7d32, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Mensagens de sucesso, status positivo e confirmações.</td>
+    </tr>
+    <tr>
+      <td><code>--color-feedback-warning</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#ed6c02', color: '#fff'}}>#ed6c02</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #ed6c02, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #ed6c02, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Avisos, alertas e estados de atenção.</td>
+    </tr>
+    <tr>
+      <td><code>--color-feedback-error</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#d32f2f', color: '#fff'}}>#d32f2f</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #d32f2f, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #d32f2f, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Erros de validação, ações destrutivas e falhas.</td>
+    </tr>
+    <tr>
+      <td><code>--color-feedback-info</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#0288d1', color: '#fff'}}>#0288d1</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #0288d1, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #0288d1, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
+      <td>Informaçoes neutras, tooltips e anéis de foco de acessibilidade.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Cores neutras
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Tema `light`</th>
+      <th>Tema `dark`</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--color-gray-100</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#f8f9fa', color: '#000'}}>#f8f9fa</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#121214', color: '#fff'}}>#121214</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-200</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#e9ecef', color: '#000'}}>#e9ecef</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#1a1a1e', color: '#fff'}}>#1a1a1e</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-300</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#dee2e6', color: '#000'}}>#dee2e6</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#29292e', color: '#fff'}}>#29292e</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-400</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#ced4da', color: '#000'}}>#ced4da</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#323238', color: '#fff'}}>#323238</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-500</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#adb5bd', color: '#fff'}}>#adb5bd</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#6c757d', color: '#fff'}}>#6c757d</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-600</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#6c757d', color: '#fff'}}>#6c757d</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#7c7c8a', color: '#fff'}}>#7c7c8a</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-700</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#495057', color: '#fff'}}>#495057</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#8d8d99', color: '#fff'}}>#8d8d99</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-800</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#343a40', color: '#fff'}}>#343a40</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#c4c4cc', color: '#000'}}>#c4c4cc</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-gray-900</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#212529', color: '#fff'}}>#212529</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#e1e1e6', color: '#000'}}>#e1e1e6</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-white</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#fff', color: '#000'}}>#ffffff</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#fff', color: '#000'}}>#ffffff</code></td>
+    </tr>
+    <tr>
+      <td><code>--color-black</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#000', color: '#fff'}}>#000000</code></td>
+      <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#000', color: '#fff'}}>#000000</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Tokens semânticos de superfície e texto
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variável semântica</th>
+      <th>Valor padrão</th>
+      <th>Tema `light`</th>
+      <th>Tema `dark`</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--color-bg-canvas</code></td>
+      <td><code>var(--color-gray-100)</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#f8f9fa', color: '#000'}}>#f8f9fa</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#121214', color: '#fff'}}>#121214</code></td>
+      <td>Fundo principal da aplicação / tela.</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-title</code></td>
+      <td><code>var(--color-gray-900)</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#212529', color: '#fff'}}>#212529</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#e1e1e6', color: '#000'}}>#e1e1e6</code></td>
+      <td>Títulos (h1-h6) e textos de alto contraste.</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-body</code></td>
+      <td><code>var(--color-gray-700)</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#495057', color: '#fff'}}>#495057</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#8d8d99', color: '#fff'}}>#8d8d99</code></td>
+      <td>Cor padrão para parágrafos e corpo de texto.</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-inverse</code></td>
+      <td><code>var(--color-white)</code> e <code>var(--color-black)</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#fff', color: '#000'}}>#ffffff</code></td>
+      <td style={{ textAlign: 'center' }}><code style={{backgroundColor: '#000', color: '#fff'}}>#000000</code></td>
+      <td>Texto sobre fundos escuros / opostos ao tema ativo.</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-link</code></td>
+      <td><code>var(--color-primary)</code></td>
+      <td colspan="2" style={{ textAlign: 'center' }}><code style={{backgroundColor: '#4a50c6', color: '#fff'}}>#4a50c6</code></td>
+      <td>Cor padrão para links.</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-link-hover</code></td>
+      <td><code>var(--color-primary-dark)</code></td>
+      <td colspan="2" style={{ textAlign: 'center' }}><code style={{backgroundColor: 'color-mix(in srgb, #4a50c6, #000 50%', color: '#fff'}}>#4a50c6</code></td>
+      <td>Cor padrão da pseudo-classe `hover` e `focus-visible` de links.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 2. Escala de espaçamento (`--spacing-*`)
+
+Todos os espaçamentos usam a unidade <code>rem</code> baseada em <code>1rem = 10px</code> (devido ao <code>font-size: 62.5%</code> no <code>html</code>). As variáveis crescem uniformemente, em passos de 0.4rem, exceto pelo `spacing-px`, que corresponde a exatamente `1px`.
+
+<div style={{marginBottom: '2rem'}}></div>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Variável</th>
+      <th>Valor em rem / px</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr>
+      <td><code>--spacing-px</code></td>
+      <td><code>1px</code></td>
+      <td>Espessura padrão de bordas e separadores.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-1</code></td>
+      <td><code>0.4rem</code> (4px)</td>
+      <td>Gaps micro, paddings internos de badges/tags.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-2</code></td>
+      <td><code>0.8rem</code> (8px)</td>
+      <td>Gaps de ícones com texto, paddings pequenos.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-3</code></td>
+      <td><code>1.2rem</code> (12px)</td>
+      <td>Padding interno de botões compactos e inputs.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-4</code></td>
+      <td><code>1.6rem</code> (16px)</td>
+      <td>Espaçamento padrão entre elementos em mobile.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-6</code></td>
+      <td><code>2.4rem</code> (24px)</td>
+      <td>Padding de containers e cards no desktop.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-8</code></td>
+      <td><code>3.2rem</code> (32px)</td>
+      <td>Margem de separação de seções institucionais.</td>
+    </tr>
+    <tr>
+      <td><code>--spacing-10</code> até <code>20</code></td>
+      <td><code>4.0rem</code> ate <code>8.0rem</code></td>
+      <td>Espaçamentos amplos de Hero Sections e LPs.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 3. Tipografia
+
+A família tipográfica padrão é a **Onest** (`var(--font-family-base)`).
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Tamanhos de fonte (`--font-size-*`)
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valor em rem / px</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--font-size-xs</code></td>
+      <td style={{textAlign: 'center'}}><code>1.2rem</code> (12px)</td>
+      <td>Legendas secundárias, badges e tooltips.</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-sm</code></td>
+      <td style={{textAlign: 'center'}}><code>1.4rem</code> (14px)</td>
+      <td>Textos auxiliares, labels de formulário e botões pequenos.</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-md</code></td>
+      <td style={{textAlign: 'center'}}><code>1.6rem</code> (16px)</td>
+      <td>Tamanho padrão do corpo de texto (body) e inputs.</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-lg</code></td>
+      <td style={{textAlign: 'center'}}><code>1.8rem</code> (18px)</td>
+      <td>Subtítulos em destaque e introduções de artigos.</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-xl</code></td>
+      <td style={{textAlign: 'center'}}><code>2.0rem</code> (20px)</td>
+      <td>Títulos de seções secundárias e cards (H4).</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-xxl</code></td>
+      <td style={{textAlign: 'center'}}><code>2.4rem</code> (24px)</td>
+      <td>Títulos de containers e modais (H3).</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-xxxl</code></td>
+      <td style={{textAlign: 'center'}}><code>3.2rem</code> (32px)</td>
+      <td>Títulos de páginas principais (H2).</td>
+    </tr>
+    <tr>
+      <td><code>--font-size-xxxxl</code></td>
+      <td style={{textAlign: 'center'}}><code>4.0rem</code> (40px)</td>
+      <td>Títulos Hero e grandes banners de destaque (H1).</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Pesos de fonte (`--font-weight-*`)
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valor</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--font-weight-regular</code></td>
+      <td style={{textAlign: 'center'}}><code>400</code></td>
+      <td>Corpo de texto padrão e parágrafos longos.</td>
+    </tr>
+    <tr>
+      <td><code>--font-weight-medium</code></td>
+      <td style={{textAlign: 'center'}}><code>500</code></td>
+      <td>Links, botões e elementos que precisam de leve contraste.</td>
+    </tr>
+    <tr>
+      <td><code>--font-weight-semibold</code></td>
+      <td style={{textAlign: 'center'}}><code>600</code></td>
+      <td>Subtítulos intermediários e campos em foco.</td>
+    </tr>
+    <tr>
+      <td><code>--font-weight-bold</code></td>
+      <td style={{textAlign: 'center'}}><code>700</code></td>
+      <td>Títulos principais (H1-H6) e destaques de tabela.</td>
+    </tr>
+    <tr>
+      <td><code>--font-weight-extrabold</code></td>
+      <td style={{textAlign: 'center'}}><code>800</code></td>
+      <td>Números de métricas, KPIs e banners promocionais.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Altura de linha (`--line-height-*`)
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Proporção</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--line-height-shorter</code></td>
+      <td style={{textAlign: 'center'}}><code>1.25</code></td>
+      <td>Títulos grandes (H1 e H2) para evitar grande espaçamento vertical.</td>
+    </tr>
+    <tr>
+      <td><code>--line-height-short</code></td>
+      <td style={{textAlign: 'center'}}><code>1.4</code></td>
+      <td>Subtítulos, botões e títulos curtos em cards.</td>
+    </tr>
+    <tr>
+      <td><code>--line-height-base</code></td>
+      <td style={{textAlign: 'center'}}><code>1.6</code></td>
+      <td>Altura de linha padrão para boa leitura do corpo de texto (body).</td>
+    </tr>
+    <tr>
+      <td><code>--line-height-tall</code></td>
+      <td style={{textAlign: 'center'}}><code>1.8</code></td>
+      <td>Textos institucionais longos e blogs para leitura descansada.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 4. Arredondamento de bordas (`--radii-*`)
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valor em rem / px</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--radii-sm</code></td>
+      <td style={{textAlign: 'center'}}><code>0.4rem</code> (4px)</td>
+      <td>Anéis de foco, tooltips e tags quadradas.</td>
+    </tr>
+    <tr>
+      <td><code>--radii-md</code></td>
+      <td style={{textAlign: 'center'}}><code>0.8rem</code> (8px)</td>
+      <td>Botões, inputs de formulário, cards e alertas.</td>
+    </tr>
+    <tr>
+      <td><code>--radii-lg</code></td>
+      <td style={{textAlign: 'center'}}><code>1.6rem</code> (16px)</td>
+      <td>Modais, gavetas laterais (drawers) e caixas destacadas.</td>
+    </tr>
+    <tr>
+      <td><code>--radii-xl</code></td>
+      <td style={{textAlign: 'center'}}><code>2.4rem</code> (24px)</td>
+      <td>Containers amplos e cards de destaque em Landing Pages.</td>
+    </tr>
+    <tr>
+      <td><code>--radii-xxl</code></td>
+      <td style={{textAlign: 'center'}}><code>3.2rem</code> (32px)</td>
+      <td>Hero sections e seções curvas de grandes superfícies.</td>
+    </tr>
+    <tr>
+      <td><code>--radii-pill</code></td>
+      <td style={{textAlign: 'center'}}><code>999px</code></td>
+      <td>Pill Badges, tags e botões totalmente arredondados nas pontas.</td>
+    </tr>
+    <tr>
+      <td><code>--radii-round</code></td>
+      <td style={{textAlign: 'center'}}><code>50%</code></td>
+      <td>Avatares circulares, seletores de rádio e botões de ícones circulares.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 5. Camadas visuais (`--z-index-*`)
+
+Controle de sobreposição de elementos para evitar conflitos de empilhamento no z-index.
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Nível</th>
+      <th>Elemento destinado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--z-index-base</code></td>
+      <td style={{textAlign: 'center'}}><code>0</code></td>
+      <td>Fluxo de camada padrão do documento.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-sticky</code></td>
+      <td style={{textAlign: 'center'}}><code>100</code></td>
+      <td>Cabeçalhos fixos de tabelas ou filtros pegajosos durante o scroll.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-fixed</code></td>
+      <td style={{textAlign: 'center'}}><code>200</code></td>
+      <td>Topbars e barras de navegação fixadas no topo.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-sidebar</code></td>
+      <td style={{textAlign: 'center'}}><code>300</code></td>
+      <td>Menu lateral de navegação (Sidebar do sistema).</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-overlay</code></td>
+      <td style={{textAlign: 'center'}}><code>400</code></td>
+      <td>Fundo escuro/desfocado (backdrop) para modais e gavetas.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-modal</code></td>
+      <td style={{textAlign: 'center'}}><code>500</code></td>
+      <td>Caixas de diálogo, modais e gavetas interativas.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-popover</code></td>
+      <td style={{textAlign: 'center'}}><code>600</code></td>
+      <td>Menus dropdown, popovers e pickers de data/cor.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-tooltip</code></td>
+      <td style={{textAlign: 'center'}}><code>700</code></td>
+      <td>Dicas flutuantes (tooltips) de elementos em hover.</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-toast</code></td>
+      <td style={{textAlign: 'center'}}><code>800</code></td>
+      <td>Notificações temporárias flutuantes (toasts).</td>
+    </tr>
+    <tr>
+      <td><code>--z-index-alert</code></td>
+      <td style={{textAlign: 'center'}}><code>900</code></td>
+      <td>Alertas críticos do sistema e diálogos de confirmação emergencial.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 6. Transições (`--transition-*`)
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valores</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--transition-fast</code></td>
+      <td style={{textAlign: 'center'}}><code>100ms cubic-bezier(0, 0, 0.2, 1)</code></td>
+      <td>Mudanças imediatas (ex: cor de hover de botões e links).</td>
+    </tr>
+    <tr>
+      <td><code>--transition-base</code></td>
+      <td style={{textAlign: 'center'}}><code>200ms cubic-bezier(0.4, 0, 0.2, 1)</code></td>
+      <td>Transição padrão de componentes (ex: foco, troca de temas e expansão de cards).</td>
+    </tr>
+    <tr>
+      <td><code>--transition-smooth</code></td>
+      <td style={{textAlign: 'center'}}><code>300ms cubic-bezier(0.4, 0, 0.2, 1)</code></td>
+      <td>Animações suaves de layout (ex: abertura de modais, gavetas e menus sanfona).</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 7. Utilitários e classes globais
+
+<div style={{marginBottom: '2rem'}}></div>
+
+### Acessibilidade (`.sinc-sr-only`)
+
+Para esconder elementos visualmente, mas mantê-los legíveis por leitores de tela:
+
+```html
+<span class="sinc-sr-only">Descrição legível apenas por leitores de tela</span>
+```
+
+Com o modificador `--focusable` (usado no `Skip Link` de acessibilidade), o elemento torna-se visível quando focado com teclado (`Tab`):
+
+```html
+<a href="#main-content" class="sinc-sr-only --focusable">
+  Pular para o conteúdo principal
+</a>
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+### Anel de foco global
+
+Todos os elementos interativos recebem automaticamente um outline visível quando focados via teclado (`:focus-visible`):
+
+* **Outline:** `2px solid var(--color-feedback-info)`
+* **Offset:** `-3px`
+* **Border Radius:** `var(--radii-sm)`
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 8. Reset de CSS e estilos de base
+
+O arquivo `global.css` aplica regras globais de normalização para garantir consistência entre navegadores e evitar surpresas de layout.
+
+<div style={{marginBottom: '2rem'}}></div>
+
+### Modelo de caixa e espaçamentos universais (`*`)
+
+Todos os elementos e pseudo-elementos (`*::before`, `*::after`) adotam o modelo de caixa `border-box` e têm suas margens e paddings zerados por padrão:
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+```
+<div style={{marginBottom: '4rem'}}></div>
+
+### Unidade de medida base e rolagem suave (`html`)
+
+A raiz do documento redefine o tamanho de fonte base para `62.5%` para facilitar o cálculo de rem em base decimal e ativa a rolagem suave nativa para navegação por âncoras:
+
+* **`1rem = 10px`** (`1.6rem = 16px`, `2.4rem = 24px`).
+* **`scroll-behavior: smooth`:** Garante deslize suave ao clicar em links que apontam para IDs da mesma página.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Ocultamento estrito (`[hidden]`)
+
+Garante que qualquer elemento contendo o atributo nativo HTML `hidden` seja completamente removido do fluxo visual, sobrescrevendo eventuais regras acidentais de `display`:
+
+```css
+[hidden] {
+  display: none !important;
+}
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Remoção de estilos de lista (ul, ol)
+
+Remove as marcas de ponto (bullet points) e numerações nativas de listas, mantendo a estrutura semântica dos elementos no HTML sem interferir visualmente em menus, navbars e componentes de grupo:
+
+```css
+ul,
+ol {
+  list-style: none;
+}
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Bloqueio de scroll global (`:has()`)
+
+Quando um modal ou gaveta lateral está aberto, o sistema bloqueia a rolagem do fundo automaticamente via CSS, sem necessidade de manipular classes diretamente no `body`:
+
+```css
+:root:has([data-state='open'][data-scroll-lock]) {
+  overflow: hidden !important;
+
+  body,
+  [data-scrollable] {
+    overflow: hidden !important;
+  }
+}
+```
+
+### Tratamento de imagens e mídia
+
+* **Midia Responsiva:** `img`, `video`, `svg` e `iframe` possuem `max-width: 100%` por padrão.
+* **Imagens Decorativas Quebradas:** Imagens com `role="presentation"` sem atributo `src`, com `src=""` ou com a classe `.is-broken` são ocultadas do fluxo visual e de leitura:
+
+```css
+img[role='presentation'] {
+  &:not([src]),
+  &[src=''],
+  &[src='#'],
+  &.is-broken {
+    display: none !important;
+  }
+}
+```
+
+### Reset de elementos nativos (`button` e `a`)
+
+* **`button`**: Remove bordas, fundos nativos do sistema e estiliza a propriedade `cursor: pointer`, herdando a tipografia do contexto.
+* **`a`**: Remove o sublinhado padrão (`text-decoration: none`), aplica a cor `var(--color-text-link)` e `var(--color-text-link-hover)` no `hover` e `focus-visible` e utiliza `overflow-wrap: anywhere` para evitar que URLs longas quebrem o layout em telas menores.

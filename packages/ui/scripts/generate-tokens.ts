@@ -3,12 +3,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  breakpoints,
   colors,
   fontSizes,
   fontWeights,
   lineHeights,
   radii,
+  shadows,
   spacing,
   transitions,
   zIndices,
@@ -41,8 +41,8 @@ function generateCssTokens() {
   appendTokens('font-weight', fontWeights);
   appendTokens('line-height', lineHeights);
   appendTokens('z-index', zIndices);
-  appendTokens('breakpoint', breakpoints);
   appendTokens('transition', transitions);
+  appendTokens('shadow', shadows);
 
   Object.entries(colors).forEach(([key, value]) => {
     if (typeof value === 'object') {

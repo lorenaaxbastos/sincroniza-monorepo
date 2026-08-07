@@ -1,0 +1,240 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Fundamentos/Utilitários" />
+
+# Utilitários
+
+O pacote `@sincroniza/ui` disponibiliza uma suíte de funções auxiliares puras em TypeScript para manipulação do DOM, gestão de acessibilidade (ARIA), sincronização de temas, controle unificado de rolagem (`scroll`) e validação/segurança de URLs e navegação.
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 1. Funções de manipulação de DOM (`dom.ts`)
+
+Disponíveis via `import { ... } from '@sincroniza/ui/utils/dom'`.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Resumo das Funções
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Função</th>
+      <th>Assinatura</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>toggleDataState</code></td>
+      <td><code>(element, attrName, states, forceState?) =&gt; string</code></td>
+      <td>Alterna um atributo de estado entre dois valores (ex: <code>['open', 'closed']</code>) ou força um valor específico.</td>
+    </tr>
+    <tr>
+      <td><code>toggleDataFlag</code></td>
+      <td><code>(element, attrName, forceValue?) =&gt; boolean</code></td>
+      <td>Alterna um atributo booleano (adiciona com valor <code>"true"</code> ou remove o atributo do elemento).</td>
+    </tr>
+    <tr>
+      <td><code>setAriaState</code></td>
+      <td><code>(element, ariaAttr, value, flagAttr?) =&gt; void</code></td>
+      <td>Define o valor de um atributo <code>aria-*</code> e opcionalmente sincroniza um atributo de flag visual.</td>
+    </tr>
+    <tr>
+      <td><code>closeOpenElements</code></td>
+      <td><code>(container?) =&gt; void</code></td>
+      <td>Busca e fecha todos os elementos abertos (<code>data-state="open"</code>) e desativa seus botões gatilho.</td>
+    </tr>
+    <tr>
+      <td><code>toggleTheme</code></td>
+      <td><code>(storageKey?) =&gt; 'light' | 'dark'</code></td>
+      <td>Alterna o atributo <code>data-theme</code> no <code>&lt;html&gt;</code> e salva a preferência no <code>localStorage</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Exemplos práticos de uso
+
+<div style={{marginBottom: '2rem'}}></div>
+
+#### A. Alternar estado visual (`toggleDataState` e `toggleDataFlag`)
+
+```typescript
+import { toggleDataState, toggleDataFlag } from '@sincroniza/ui/utils/dom';
+
+const modal = document.querySelector('#meu-modal');
+
+// Alterna entre 'open' e 'closed'
+const novoEstado = toggleDataState(modal, 'data-state', ['open', 'closed']);
+
+// Adiciona ou remove a flag data-active
+toggleDataFlag(modal, 'data-active');
+```
+
+#### B. Atualizar acessibilidade (`setAriaState`)
+
+```typescript
+import { setAriaState } from '@sincroniza/ui/utils/dom';
+
+const button = document.querySelector('button');
+
+// Define aria-expanded="true" e aplica data-active="true" no botão
+setAriaState(button, 'aria-expanded', true, 'data-active');
+```
+
+#### C. Fechar modais/popovers ativos (`closeOpenElements`)
+
+```typescript
+import { closeOpenElements } from '@sincroniza/ui/utils/dom';
+
+// Fecha todos os modais abertos no documento (usado no listener de tecla ESC ou clique no Overlay)
+closeOpenElements();
+```
+
+#### D. Alternar Tema (`toggleTheme`)
+
+```typescript
+import { toggleTheme } from '@sincroniza/ui/utils/dom';
+
+// Alterna o tema no <html data-theme="..."> e atualiza no localStorage
+const temaAtual = toggleTheme(); // Retorna 'light' ou 'dark'
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 2. Funções de scroll (`scroll.ts`)
+
+Disponíveis via `import { ... } from '@sincroniza/ui/utils/scroll'`.
+
+Essas funções garantem abstração transparente para cenários onde a rolagem ocorre tanto na janela principal (`window`) quanto em contêineres internos de layout que possuem o atributo `[data-scrollable]`.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Resumo das Funções
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Função</th>
+      <th>Assinatura</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>getScrollTarget</code></td>
+      <td><code>(selector?) =&gt; HTMLElement | Window</code></td>
+      <td>Detecta se o contêiner <code>[data-scrollable]</code> possui rolagem própria ou se o scroll pertence ao <code>window</code>.</td>
+    </tr>
+    <tr>
+      <td><code>getScrollPosition</code></td>
+      <td><code>(target) =&gt; number</code></td>
+      <td>Retorna a posição vertical do scroll (em pixels) do elemento alvo ou do <code>window</code>.</td>
+    </tr>
+    <tr>
+      <td><code>scrollToTop</code></td>
+      <td><code>(target, top?) =&gt; void</code></td>
+      <td>Rola o alvo até a posição especificada respeitando a preferência de acessibilidade <code>prefers-reduced-motion</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Exemplos práticos de uso
+
+#### A. Identificar e ler o scroll do App Shell (`getScrollTarget` + `getScrollPosition`)
+
+```typescript
+import { getScrollTarget, getScrollPosition } from '@sincroniza/ui/utils/scroll';
+
+// Identifica se a área rolável é o <main data-scrollable> ou o window
+const target = getScrollTarget('[data-scrollable]');
+
+// Adiciona ouvinte de scroll unificado
+target.addEventListener('scroll', () => {
+  const scrollPixels = getScrollPosition(target);
+  console.log(`Scroll atual: ${scrollPixels}px`);
+});
+```
+
+#### B. Botão de voltar ao topo (`scrollToTop`)
+
+```typescript
+import { getScrollTarget, scrollToTop } from '@sincroniza/ui/utils/scroll';
+
+const backToTopBtn = document.querySelector('#scroll-to-top');
+
+backToTopBtn?.addEventListener('click', () => {
+  const target = getScrollTarget();
+  
+  // Realiza scroll suave (ou instantâneo se prefers-reduced-motion estiver ativo)
+  scrollToTop(target, 0);
+});
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 3. Funções de URL e navegação (`url.ts`)
+
+Disponíveis via `import { ... } from '@sincroniza/ui/utils/url'`.
+
+Essas funções auxiliam na detecção de URLs externas e na geração automática e segura dos atributos de links (`target` e `rel`).
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Resumo das Funções
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Função</th>
+      <th>Assinatura</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>isExternalUrl</code></td>
+      <td><code>(url?) =&gt; boolean</code></td>
+      <td>Identifica se uma URL é externa (absoluta com protocolo/barras) ou se utiliza protocolos especiais (<code>mailto:</code>, <code>tel:</code>, <code>sms:</code>).</td>
+    </tr>
+    <tr>
+      <td><code>getLinkAttributes</code></td>
+      <td><code>(href?, isExternalOverride?, target?, rel?) =&gt; ExternalLinkAttributes</code></td>
+      <td>Retorna um objeto com os atributos <code>target</code> e <code>rel</code> adequados para segurança (<code>target="_blank"</code> e <code>rel="noopener noreferrer"</code> em links externos).</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Exemplos práticos de uso
+
+<div style={{marginBottom: '2rem'}}></div>
+
+#### A. Verificar se uma URL é externa (`isExternalUrl`)
+
+```typescript
+import { isExternalUrl } from '@sincroniza/ui/utils/url';
+
+isExternalUrl('[https://google.com](https://google.com)'); // true
+isExternalUrl('mailto:contato@empresa.com'); // true
+isExternalUrl('/dashboard/perfil'); // false
+```
+
+#### B. Obter atributos seguros para elementos de ancoragem (`getLinkAttributes`)
+
+```typescript
+import { getLinkAttributes } from '@sincroniza/ui/utils/url';
+
+// Para links externos, injeta automaticamente target="_blank" e rel="noopener noreferrer"
+const attrsExterno = getLinkAttributes('[https://google.com](https://google.com)');
+// Retorna: { target: '_blank', rel: 'noopener noreferrer' }
+
+// Para links internos, mantém target e rel como undefined (preservando navegação padrão)
+const attrsInterno = getLinkAttributes('/dashboard');
+// Retorna: { target: undefined, rel: undefined }
+```

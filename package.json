@@ -39,7 +39,6 @@
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.2.0",
     "astro-eslint-parser": "^1.4.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
@@ -59,5 +58,10 @@
     "typescript-eslint": "^8.60.1",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.8"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "^6.2.0"
+    }
   }
 }

@@ -1,0 +1,97 @@
+---
+import { ArrowUp } from 'lucide-react';
+import { Button, type ButtonAsButton } from '@/components/Button';
+
+export interface Props extends ButtonAsButton {
+  /** Permite receber a classe CSS enviada pelo Astro */
+  class?: string;
+  threshold?: number;
+  ariaLabel?: string;
+}
+
+const {
+  threshold = 300,
+  ariaLabel = 'Voltar ao topo da página',
+  class: className,
+  ...rest
+} = Astro.props;
+
+/* Combina a classe padrão com qualquer classe extra enviada via props */
+const buttonClassName = ['sinc-scroll-to-top', className]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<Button
+  variant="solid"
+  color="primary"
+  isIconOnly
+  isPill
+  className={buttonClassName}
+  data-scroll-to-top
+  data-threshold={threshold}
+  aria-label={ariaLabel}
+  {...rest}
+>
+  <ArrowUp size={25} aria-hidden="true" />
+</Button>
+
+<style>
+  .sinc-scroll-to-top {
+    position: fixed;
+    bottom: var(--spacing-6);
+    right: var(--spacing-6);
+    z-index: var(--z-index-sticky);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1rem);
+    transition:
+      opacity var(--transition-smooth),
+      visibility var(--transition-smooth),
+      transform var(--transition-smooth);
+    box-shadow: 0 0.4rem 1.2rem
+      color-mix(in srgb, var(--color-black), transparent 75%);
+
+    &[data-visible='true'] {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sinc-scroll-to-top {
+      transition: opacity var(--transition-fast);
+    }
+  }
+</style>
+
+<script lang="ts">
+  import {
+    getScrollPosition,
+    getScrollTarget,
+    scrollToTop,
+  } from '../utils/scroll';
+
+  function initScrollToTop() {
+    const button = document.querySelector('[data-scroll-to-top]');
+    if (!button) return;
+
+    const threshold = Number(button.dataset.threshold) || 300;
+    const targetSelector = button.dataset.target;
+
+    const scrollTarget = getScrollTarget(targetSelector);
+
+    const handleScroll = () => {
+      const isPastThreshold = getScrollPosition(scrollTarget) > threshold;
+      button.setAttribute('data-visible', isPastThreshold ? 'true' : 'false');
+    };
+
+    button.addEventListener('click', () => scrollToTop(scrollTarget));
+    scrollTarget.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
+
+  initScrollToTop();
+  document.addEventListener('astro:page-load', initScrollToTop);
+</script>

@@ -1,0 +1,31 @@
+.shell {
+  --_main-padding: var(--sinc-web-layout-main-padding, var(--spacing-6));
+  --_main-padding-mobile: var(
+    --sinc-web-layout-main-padding-mobile,
+    var(--spacing-4)
+  );
+  --_bg-color: var(--sinc-web-layout-bg, var(--color-bg-canvas));
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--_bg-color);
+}
+
+.header {
+  flex-shrink: 0;
+  min-height: var(--sinc-header-height);
+}
+
+.main {
+  flex: 1 0 auto;
+  padding: var(--_main-padding);
+
+  @media (max-width: 48em) {
+    padding: var(--_main-padding-mobile);
+  }
+}
+
+.footer {
+  flex-shrink: 0;
+}

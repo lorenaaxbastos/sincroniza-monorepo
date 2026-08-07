@@ -1,0 +1,171 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Fundamentos/Atributos de estado (data attributes)" />
+
+# Atributos de estado (`data-*`)
+
+O sistema utiliza **data attributes (`data-*`)** para gerenciar estados visuais, comportamentos de scroll, temas e acessibilidade. Essa abordagem desacopla o comportamento do nome de classes CSS e cria um contrato claro entre componentes e estilos.
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## Tabela de Atributos do Sistema
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Atributo</th>
+      <th>Valores possíveis</th>
+      <th>Onde é aplicado</th>
+      <th>Comportamento / Efeito no CSS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>data-theme</code></td>
+      <td><code>light</code> | <code>dark</code></td>
+      <td><code>&lt;html&gt;</code> ou <code>:root</code></td>
+      <td>Alterna a paleta de cores primárias, neutras e semânticas para o modo escuro/claro.</td>
+    </tr>
+    <tr>
+      <td><code>data-theme-toggle</code></td>
+      <td>Atributo booleano (presente)</td>
+      <td><code>&lt;button&gt;</code> de alternar tema</td>
+      <td>Ganchos JS/Astro para vincular os scripts de troca de tema sem depender de classes CSS.</td>
+    </tr>
+    <tr>
+      <td><code>data-scroll-lock</code></td>
+      <td>Atributo booleano (presente)</td>
+      <td>Modais, drawers e dialogs flutuantes</td>
+      <td>Sinaliza que o elemento aberto exige o travamento de scroll da página e de áreas roláveis internas.</td>
+    </tr>
+    <tr>
+      <td><code>data-scrollable</code></td>
+      <td>Atributo booleano (presente)</td>
+      <td><code>&lt;main&gt;</code>, áreas com overflow interno</td>
+      <td>Identifica contêineres que possuem rolagem interna própria no `app-shell`, garantindo recepção de anel de foco e travamento de scroll.</td>
+    </tr>
+    <tr>
+      <td><code>data-overlay</code></td>
+      <td><code>behind</code> | <code>front</code></td>
+      <td>Modais, Drawers, Dialogs, Popovers</td>
+      <td>Controla a profundidade e visibilidade do overlay global. O valor <code>behind</code> ajusta o z-index do overlay para ficar atrás do elemento em destaque (camada sticky), enquanto <code>front</code> posiciona o overlay na camada padrão de sobreposição.</td>
+    </tr>
+    <tr>
+      <td><code>data-global-overlay</code></td>
+      <td>Atributo booleano (presente)</td>
+      <td><code>&lt;div class="sinc-global-overlay"&gt;</code> (injetado na raiz)</td>
+      <td>Identifica a máscara de fundo escuro global da página. Usado pelo ouvinte global para interceptar cliques externos e invocar <code>closeOpenElements()</code>.</td>
+    </tr>
+    <tr>
+      <td><code>data-state</code></td>
+      <td><code>open</code> | <code>closed</code></td>
+      <td>Modais, popovers, drawers, dialogs</td>
+      <td>Indica se o componente está visível/aberto. Usado em conjunto com <code>data-scroll-lock</code> para travar o scroll.</td>
+    </tr>
+    <tr>
+      <td><code>data-active</code></td>
+      <td><code>true</code> | <code>false</code> / Booleano</td>
+      <td>Botões gatilho, alternadores (ex: <code>[data-theme-toggle]</code>, dropdowns)</td>
+      <td>Sinaliza visualmente se o gatilho está num estado ativo (sincronizado com <code>aria-pressed</code> ou <code>aria-expanded</code>). É resetado automaticamente ao invocar <code>closeOpenElements()</code>.</td>
+    </tr>
+    <tr>
+      <td><code>data-collapsed</code></td>
+      <td><code>true</code> | <code>undefined</code></td>
+      <td><code>&lt;aside&gt;</code> (Sidebar)</td>
+      <td>Sinaliza o estado encolhido da barra lateral no Desktop. Aplica a transição de largura para exibir apenas os ícones e inverte a seta do botão de controle.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## Exemplos de uso prático
+
+<div style={{marginBottom: '2rem'}}></div>
+
+### 1. Modal/Gaveta com overlay e bloqueio de scroll
+
+Para que um modal exiba o overlay escuro, bloqueie a rolagem de fundo e sinalize seu estado aberto, combine os atributos no contêiner do modal:
+
+```html
+<div data-state="open" data-scroll-lock data-overlay="front">
+  <!-- Conteúdo do Modal -->
+</div>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 2. Botão de alternância de tema
+
+Identifica o botão responsável por acionar o script global de troca de tema (`light`/`dark`):
+
+```html
+<button data-theme-toggle aria-label="Alternar tema">
+  Alternar Tema
+</button>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 3. Identificar áreas com rolagem interna
+
+Utilizado em layouts de dashboard onde o `<main>` rola independentemente da Sidebar e Topbar:
+
+```html
+<main id="main-content" data-scrollable>
+  <!-- Conteúdo com scroll próprio -->
+</main>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 4. Definir tema raiz da aplicação
+
+Aplicado no elemento raiz para ativar o conjunto de variáveis do tema correspondente:
+
+```html
+<html data-theme="dark">
+  <!-- A aplicação assumirá as variáveis do tema escuro -->
+</html>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 5. Botão de gatilho com estado ativo (`data-active`)
+
+Utilizado em botões que alternam estado visual ou expandem menus (como o alternador de tema ou botões de menu hambúrguer):
+
+```html
+<button
+  data-theme-toggle
+  data-active="true"
+  aria-pressed="true"
+  aria-label="Alternar tema"
+>
+  Alternar Tema
+</button>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 6. Controle de estado da Sidebar (desktop)
+
+Utilizado para sinalizar à barra lateral que ela deve transicionar para sua versão encolhida, exibindo apenas ícones:
+
+```html
+<!-- A Sidebar encolhe e o botão inverte a direção da seta -->
+<aside class="sinc-sidebar" data-collapsed="true">
+  <!-- Conteúdo interno -->
+</aside>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 7. Máscara de sobreposição global (injetada pelo sistema)
+
+Este elemento não precisa ser criado manualmente nos componentes. O script `dom.ts` o injeta automaticamente no `<body>` quando modais ou drawers são abertos, servindo como interceptador de cliques para fechar os elementos:
+
+```html
+<!-- Injetado automaticamente via JavaScript na raiz da página -->
+<div class="sinc-global-overlay" data-global-overlay="true"></div>
+```

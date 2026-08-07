@@ -1,0 +1,149 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type SpacingSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+type GridCols = number | string;
+
+export interface Props extends HTMLAttributes<'div'> {
+  as?: 'div' | 'section' | 'ul' | 'ol' | 'nav';
+
+  cols?: GridCols;
+  colsXl?: GridCols;
+  colsLg?: GridCols;
+  colsMd?: GridCols;
+  colsSm?: GridCols;
+
+  minItemWidth?: string;
+
+  gap?: SpacingSize;
+  gapXl?: SpacingSize;
+  gapLg?: SpacingSize;
+  gapMd?: SpacingSize;
+  gapSm?: SpacingSize;
+
+  align?: 'start' | 'end' | 'center' | 'stretch';
+  justify?: 'start' | 'end' | 'center' | 'stretch' | 'space-between';
+}
+
+const {
+  as: Tag = 'div',
+  cols = 1,
+  colsXl,
+  colsLg,
+  colsMd,
+  colsSm,
+  minItemWidth,
+  gap = 'md',
+  gapXl,
+  gapLg,
+  gapMd,
+  gapSm,
+  align = 'stretch',
+  justify = 'stretch',
+  class: className,
+  style,
+  ...rest
+} = Astro.props;
+
+const gapMap: Record<SpacingSize, string> = {
+  none: '0',
+  xs: 'var(--spacing-2)',
+  sm: 'var(--spacing-3)',
+  md: 'var(--spacing-4)',
+  lg: 'var(--spacing-6)',
+  xl: 'var(--spacing-8)',
+  xxl: 'var(--spacing-12)',
+};
+
+function formatCols(value?: GridCols, autoWidth?: string): string | undefined {
+  if (autoWidth) return `repeat(auto-fit, minmax(${autoWidth}, 1fr))`;
+  if (typeof value === 'number') return `repeat(${value}, minmax(0, 1fr))`;
+  return value;
+}
+
+const baseCols = formatCols(cols, minItemWidth);
+
+const dynamicStyles = {
+  '--grid-cols': baseCols,
+  ...(colsXl && { '--grid-cols-xl': formatCols(colsXl) }),
+  ...(colsLg && { '--grid-cols-lg': formatCols(colsLg) }),
+  ...(colsMd && { '--grid-cols-md': formatCols(colsMd) }),
+  ...(colsSm && { '--grid-cols-sm': formatCols(colsSm) }),
+
+  '--grid-gap': gapMap[gap],
+  ...(gapXl && { '--grid-gap-xl': gapMap[gapXl] }),
+  ...(gapLg && { '--grid-gap-lg': gapMap[gapLg] }),
+  ...(gapMd && { '--grid-gap-md': gapMap[gapMd] }),
+  ...(gapSm && { '--grid-gap-sm': gapMap[gapSm] }),
+
+  '--grid-align': align,
+  '--grid-justify': justify,
+};
+---
+
+<Tag
+  class:list={['sinc-grid', className]}
+  style={[dynamicStyles, style]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .sinc-grid {
+    display: grid;
+    grid-template-columns: var(--grid-cols);
+    gap: var(--grid-gap);
+    align-items: var(--grid-align);
+    justify-content: var(--grid-justify);
+  }
+
+  @media (max-width: 80em) {
+    .sinc-grid {
+      grid-template-columns: var(--grid-cols-xl, var(--grid-cols));
+      gap: var(--grid-gap-xl, var(--grid-gap));
+    }
+  }
+
+  @media (max-width: 64em) {
+    .sinc-grid {
+      grid-template-columns: var(
+        --grid-cols-lg,
+        var(--grid-cols-xl, var(--grid-cols))
+      );
+      gap: var(--grid-gap-lg, var(--grid-gap-xl, var(--grid-gap)));
+    }
+  }
+
+  @media (max-width: 48em) {
+    .sinc-grid {
+      grid-template-columns: var(
+        --grid-cols-md,
+        var(--grid-cols-lg, var(--grid-cols-xl, var(--grid-cols)))
+      );
+      gap: var(
+        --grid-gap-md,
+        var(--grid-gap-lg, var(--grid-gap-xl, var(--grid-gap)))
+      );
+    }
+  }
+
+  @media (max-width: 36em) {
+    .sinc-grid {
+      grid-template-columns: var(
+        --grid-cols-sm,
+        var(
+          --grid-cols-md,
+          var(--grid-cols-lg, var(--grid-cols-xl, var(--grid-cols)))
+        )
+      );
+      gap: var(
+        --grid-gap-sm,
+        var(
+          --grid-gap-md,
+          var(--grid-gap-lg, var(--grid-gap-xl, var(--grid-gap)))
+        )
+      );
+    }
+  }
+</style>
