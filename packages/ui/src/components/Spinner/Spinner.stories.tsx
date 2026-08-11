@@ -54,7 +54,7 @@ const meta: Meta<SpinnerStoryProps> = {
       control: 'text',
       description: 'Tamanho total do spinner',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: '2.4rem' },
       },
     },
@@ -62,7 +62,7 @@ const meta: Meta<SpinnerStoryProps> = {
       control: 'text',
       description: 'Cor do spinner',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'currentColor' },
       },
     },
@@ -70,7 +70,7 @@ const meta: Meta<SpinnerStoryProps> = {
       control: 'text',
       description: 'Velocidade da animação de rotação/pulso',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: '0.75s' },
       },
     },

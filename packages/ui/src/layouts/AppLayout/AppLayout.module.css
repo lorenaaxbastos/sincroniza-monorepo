@@ -1,7 +1,5 @@
 .shell {
   --_bg-color: var(--sinc-app-layout-bg, var(--color-bg-canvas));
-  --sinc-topbar-height: 6.4rem;
-  --sinc-topbar-height-mobile: 4.8rem;
 
   display: flex;
   width: 100vw;
@@ -24,24 +22,23 @@
   overflow: hidden;
 }
 
-.topbar,
+.header,
 .footer {
   flex-shrink: 0;
 }
 
 .main {
-  --_main-padding: var(--sinc-app-layout-main-padding, var(--spacing-6));
-  --_main-padding-mobile: var(
-    --sinc-app-layout-main-padding-mobile,
-    var(--spacing-4)
+  --_margin: var(--sinc-app-main-margin, var(--sinc-layout-panel-margin, 0rem));
+  --_border-radius: var(
+    --sinc-app-main-border-radius,
+    var(--sinc-layout-panel-border-radius, 0rem)
   );
 
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--_main-padding);
-
-  @media (max-width: 48em) {
-    padding: var(--_main-padding-mobile);
-  }
+  margin: var(--_margin);
+  margin-top: calc(var(--_margin) * -1);
+  padding-top: var(--_margin);
+  border-radius: var(--_border-radius);
 }

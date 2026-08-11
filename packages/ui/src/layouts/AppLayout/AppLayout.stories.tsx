@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArgTypes, Description, Title } from '@storybook/blocks';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '@/components/Button';
+import { NavToggle } from '@/components/NavToggle';
+import { Container } from '@/layouts/Container';
+import { Header } from '@/layouts/Header';
+import { Sidebar } from '@/layouts/Sidebar';
 import { AppLayout } from './AppLayout';
 
 type AppLayoutStoryProps = React.ComponentProps<typeof AppLayout> &
   Record<string, unknown>;
 
 const meta: Meta<AppLayoutStoryProps> = {
-  title: 'Layouts/AppLayout',
+  title: 'Templates/AppLayout',
   component: AppLayout,
   parameters: {
     layout: 'fullscreen',
@@ -32,24 +37,24 @@ const meta: Meta<AppLayoutStoryProps> = {
       control: 'text',
       description: 'Cor de fundo da casca da aplicação',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--color-bg-canvas)' },
       },
     },
-    '--sinc-app-layout-main-padding': {
+    '--sinc-app-main-margin': {
       control: 'text',
-      description: 'Padding interno do container principal (desktop)',
+      description: 'Margem externa do container principal',
       table: {
-        category: 'CSS Custom Properties',
-        defaultValue: { summary: 'var(--spacing-6)' },
+        category: 'Variáveis CSS',
+        defaultValue: { summary: 'var(--sinc-layout-panel-margin)' },
       },
     },
-    '--sinc-app-layout-main-padding-mobile': {
+    '--sinc-app-main-border-radius': {
       control: 'text',
-      description: 'Padding interno do container principal (mobile)',
+      description: 'Arredondamento das bordas do container principal',
       table: {
-        category: 'CSS Custom Properties',
-        defaultValue: { summary: 'var(--spacing-4)' },
+        category: 'Variáveis CSS',
+        defaultValue: { summary: 'var(--sinc-layout-panel-border-radius)' },
       },
     },
   },
@@ -58,118 +63,319 @@ const meta: Meta<AppLayoutStoryProps> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const SidebarMock = () => (
+const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
+  useEffect(() => {
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+
+    const overlay = document.querySelector('[data-global-overlay]');
+    const toggleBtn = document.querySelector(`[data-target="#${targetId}"]`);
+
+    const closeMenu = () => {
+      targetEl.setAttribute('data-state', 'closed');
+      overlay?.setAttribute('data-state', 'closed');
+
+      if (toggleBtn) {
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.removeAttribute('data-active'); // <-- Faltava essa linha!
+      }
+    };
+
+    const handleDocClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).matches('[data-global-overlay]')) {
+        closeMenu();
+      }
+    };
+
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeMenu();
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((m) => {
+        if (m.attributeName === 'data-state') {
+          const isOpen = targetEl.getAttribute('data-state') === 'open';
+          overlay?.setAttribute('data-state', isOpen ? 'open' : 'closed');
+        }
+      });
+    });
+
+    document.addEventListener('click', handleDocClick);
+    document.addEventListener('keydown', handleEsc);
+    observer.observe(targetEl, { attributes: true });
+
+    return () => {
+      document.removeEventListener('click', handleDocClick);
+      document.removeEventListener('keydown', handleEsc);
+      observer.disconnect();
+    };
+  }, [targetId]);
+
+  return (
+    <>
+      <style>{`
+        .sinc-global-overlay {
+          position: fixed;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(2px);
+          z-index: calc(var(--z-index-fixed, 100) - 1);
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sinc-global-overlay[data-state="open"] {
+          opacity: 1;
+          visibility: visible;
+        }
+        @media (min-width: 48.1em) {
+          .sinc-global-overlay {
+            display: none !important;
+          }
+        }
+      `}</style>
+      <div
+        className="sinc-global-overlay"
+        data-global-overlay
+        aria-hidden="true"
+      />
+    </>
+  );
+};
+
+const BrandMock = () => (
+  <strong style={{ color: 'var(--color-primary)', fontSize: '1.6rem' }}>
+    Sincroniza UI
+  </strong>
+);
+
+const SearchMock = () => (
+  <input
+    type="text"
+    placeholder="Buscar dados..."
+    style={{
+      width: '100%',
+      maxWidth: '32rem',
+      padding: '0.8rem 1.6rem',
+      borderRadius: 'var(--radii-pill)',
+      border: '1px solid var(--color-gray-300)',
+      outline: 'none',
+      backgroundColor: 'var(--color-gray-100)',
+    }}
+  />
+);
+
+const SidebarNavMock = () => (
   <div
     style={{
-      width: '24rem',
-      height: '100%',
-      backgroundColor: 'var(--color-gray-100)',
-      borderRight: 'var(--spacing-px) solid var(--color-gray-300)',
-      padding: 'var(--spacing-4)',
       display: 'flex',
       flexDirection: 'column',
-      gap: 'var(--spacing-3)',
+      gap: '2.4rem',
+      height: '100%',
     }}
   >
-    <strong style={{ color: 'var(--color-text-title)' }}>Logo</strong>
-    <nav
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--spacing-2)',
-      }}
-    >
-      <a href="#link1">Dashboard</a>
-      <a href="#link2">Projetos</a>
-      <a href="#link3">Configurações</a>
+    <strong style={{ color: 'var(--color-white)', fontSize: '1.8rem' }}>
+      Dashboard
+    </strong>
+    <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+      {['Visão Geral', 'Alunos', 'Turmas', 'Desempenho', 'Configurações'].map(
+        (item) => (
+          <button
+            key={item}
+            type="button"
+            style={{
+              background:
+                'color-mix(in srgb, var(--color-white), transparent 90%)',
+              border: 'none',
+              color: 'var(--color-white)',
+              textAlign: 'left',
+              padding: 'var(--spacing-2) var(--spacing-3)',
+              borderRadius: 'var(--radii-sm)',
+              cursor: 'pointer',
+              fontSize: 'var(--font-size-sm)',
+              fontWeight: 'var(--font-weight-medium)',
+            }}
+          >
+            {item}
+          </button>
+        ),
+      )}
     </nav>
   </div>
 );
 
-const HeaderMock = () => (
-  <div
-    style={{
-      height: '6.4rem',
-      backgroundColor: 'var(--color-gray-100)',
-      borderBottom: 'var(--spacing-px) solid var(--color-gray-300)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 var(--spacing-4)',
-    }}
-  >
-    <strong>header</strong>
-    <button data-theme-toggle>Alternar tema</button>
-  </div>
-);
+const DashboardApp = (args: AppLayoutStoryProps) => {
+  const [isSyncing, setIsSyncing] = useState(false);
 
-const FooterMock = () => (
-  <div
-    style={{
-      padding: 'var(--spacing-3) var(--spacing-4)',
-      backgroundColor: 'var(--color-gray-100)',
-      borderTop: 'var(--spacing-px) solid var(--color-gray-300)',
-      textAlign: 'center',
-      fontSize: 'var(--font-size-xs)',
-    }}
-  >
-    © 2026 Sincroniza Educação - Todos os direitos reservados.
-  </div>
-);
+  const handleSync = () => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      return (setIsSyncing(false), 2000);
+    });
+  };
 
-export const Padrão: Story = {
-  args: {
-    sidebar: <SidebarMock />,
-    header: <HeaderMock />,
-    footer: <FooterMock />,
-    children: (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--spacing-4)',
-        }}
+  return (
+    <>
+      <GlobalOverlayMock targetId="app-sidebar" />
+      <AppLayout
+        {...args}
+        sidebar={
+          <Sidebar id="app-sidebar">
+            <SidebarNavMock />
+          </Sidebar>
+        }
+        header={
+          <Header
+            start={
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}
+              >
+                <style>{`
+                  .app-mobile-nav { display: none; }
+                  @media(max-width: 48em) { .app-mobile-nav { display: block; } }
+                `}</style>
+                <div className="app-mobile-nav">
+                  <NavToggle targetSelector="#app-sidebar" />
+                </div>
+                <BrandMock />
+              </div>
+            }
+            center={
+              <div
+                style={{
+                  display: 'none',
+                  width: '100%',
+                  justifyContent: 'center',
+                }}
+                className="desktop-only"
+              >
+                <style>{`@media(min-width: 48em) { .desktop-only { display: flex !important; } }`}</style>
+                <SearchMock />
+              </div>
+            }
+            end={
+              <div
+                style={{
+                  width: '3.6rem',
+                  height: '3.6rem',
+                  background: 'var(--color-primary)',
+                  borderRadius: '50%',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold',
+                }}
+              >
+                MS
+              </div>
+            }
+          />
+        }
       >
-        <h1 style={{ margin: 0 }}>Painel principal</h1>
-        <p style={{ margin: 0 }}>
-          Este é o conteúdo dentro da área <code>main[data-scrollable]</code>.
-        </p>
-        <div
-          style={{
-            height: '120rem',
-            background: 'var(--color-gray-300)',
-            borderRadius: 'var(--radii-md)',
-            padding: 'var(--spacing-4)',
-          }}
-        >
-          Conteúdo longo para testar o scroll interno do container principal sem
-          rolar a sidebar, a header ou o footer.
-        </div>
-      </div>
-    ),
-  },
+        <Container size="xl" padding="md">
+          <div
+            style={{
+              padding: '3.2rem 0',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2.4rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+                gap: '1.6rem',
+              }}
+            >
+              <div>
+                <h1 style={{ margin: '0 0 0.8rem 0', fontSize: '2.4rem' }}>
+                  Visão Geral
+                </h1>
+                <p style={{ margin: 0, color: 'var(--color-gray-600)' }}>
+                  Acompanhe os indicadores das escolas sincronizadas.
+                </p>
+              </div>
+              <Button
+                color="primary"
+                onClick={handleSync}
+                isLoading={isSyncing}
+              >
+                Sincronizar Dados
+              </Button>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(28rem, 1fr))',
+                gap: '1.6rem',
+              }}
+            >
+              {[
+                { title: 'Total de Alunos', value: '14.230' },
+                { title: 'Média de Notas', value: '8.4' },
+                { title: 'Frequência', value: '94%' },
+              ].map((stat, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: '2.4rem',
+                    background: 'var(--color-white)',
+                    borderRadius: 'var(--radii-md)',
+                    border: '1px solid var(--color-gray-300)',
+                    boxShadow: 'var(--shadow-sm)',
+                  }}
+                >
+                  <span
+                    style={{
+                      color: 'var(--color-gray-600)',
+                      fontSize: '1.4rem',
+                    }}
+                  >
+                    {stat.title}
+                  </span>
+                  <strong
+                    style={{
+                      display: 'block',
+                      fontSize: '3.2rem',
+                      marginTop: '0.8rem',
+                      color: 'var(--color-text-title)',
+                    }}
+                  >
+                    {stat.value}
+                  </strong>
+                </div>
+              ))}
+            </div>
+
+            <div
+              style={{
+                marginTop: '2.4rem',
+                padding: '3.2rem',
+                background: 'var(--color-white)',
+                borderRadius: 'var(--radii-md)',
+                border: '1px dashed var(--color-gray-300)',
+                minHeight: '60rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <p style={{ color: 'var(--color-gray-500)' }}>
+                Área de gráficos longo (role para testar o scroll do AppLayout)
+              </p>
+            </div>
+          </div>
+        </Container>
+      </AppLayout>
+    </>
+  );
 };
 
-export const SemSidebar: Story = {
-  args: {
-    header: <HeaderMock />,
-    footer: <FooterMock />,
-    children: (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--spacing-4)',
-          padding: '2rem 0',
-          textAlign: 'center',
-        }}
-      >
-        <h1 style={{ margin: 0 }}>Layout sem a Sidebar</h1>
-        <p style={{ margin: 0 }}>
-          Utilizado em fluxos guiados, configurações ou áreas de edição em tela
-          cheia.
-        </p>
-      </div>
-    ),
-  },
+export const AplicaçãoCompleta: Story = {
+  render: (args) => <DashboardApp {...args} />,
 };

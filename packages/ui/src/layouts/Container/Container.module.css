@@ -1,0 +1,52 @@
+.container {
+  position: relative;
+  width: 100%;
+  max-width: var(--_max-width);
+  margin-inline: auto;
+  padding-inline: var(--_padding-inline);
+}
+
+.size-sm {
+  --_max-width: var(--sinc-container-max-width, 64rem);
+}
+
+.size-md {
+  --_max-width: var(--sinc-container-max-width, 76.8rem);
+}
+
+.size-lg {
+  --_max-width: var(--sinc-container-max-width, 102.4rem);
+}
+
+.size-xl {
+  --_max-width: var(--sinc-container-max-width, 128rem);
+}
+
+.size-xxl {
+  --_max-width: var(--sinc-container-max-width, 153.6rem);
+}
+
+.size-full {
+  --_max-width: var(--sinc-container-max-width, 100%);
+}
+
+.padding-none {
+  --_padding-inline: var(--sinc-container-padding-inline, 0);
+}
+
+.padding-sm {
+  --_padding-inline: var(--sinc-container-padding-inline, var(--spacing-3));
+}
+
+.padding-md {
+  --_padding-inline: var(--sinc-container-padding-inline, var(--spacing-4));
+}
+
+.padding-lg {
+  --_padding-inline: var(--sinc-container-padding-inline, var(--spacing-6));
+}
+
+.isContainerQuery {
+  container-type: inline-size;
+  container-name: main-container;
+}

@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './AppLayout.module.css';
 
-export interface AppLayoutProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface AppLayoutProps extends React.ComponentPropsWithRef<'div'> {
   /** Conteúdo opcional a ser renderizado na lateral esquerda (Menu de navegação/Sidebar) */
   sidebar?: React.ReactNode;
-  /** Conteúdo opcional a ser renderizado no topo da área visual (header) */
+  /** Conteúdo opcional a ser renderizado no topo da área visual */
   header?: React.ReactNode;
   /** Conteúdo opcional a ser renderizado no rodapé da área visual */
   footer?: React.ReactNode;
@@ -19,29 +19,30 @@ export interface AppLayoutProps extends React.ComponentPropsWithoutRef<'div'> {
  * Ele restringe a altura total à tela (`100dvh`), delegando a rolagem internamente
  * para o contêiner `<main data-scrollable>`.
  */
-export const AppLayout = ({
-  sidebar,
-  header,
-  footer,
-  children,
-  className = '',
-  ...rest
-}: AppLayoutProps) => {
-  return (
-    <div className={`${styles.shell} ${className}`.trim()} {...rest}>
-      {sidebar && <aside className={styles.sidebar}>{sidebar}</aside>}
+export const AppLayout = React.forwardRef<HTMLDivElement, AppLayoutProps>(
+  ({ sidebar, header, footer, children, className = '', ...rest }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={`${styles.shell} ${className}`.trim()}
+        {...rest}
+      >
+        {sidebar && <aside className={styles.sidebar}>{sidebar}</aside>}
 
-      <div className={styles.view}>
-        {header && <header className={styles.header}>{header}</header>}
+        <div className={styles.view}>
+          {header && <header className={styles.header}>{header}</header>}
 
-        <main id="main-content" className={styles.main} data-scrollable>
-          {children}
-        </main>
+          <main id="main-content" className={styles.main} data-scrollable>
+            {children}
+          </main>
 
-        {footer && <footer className={styles.footer}>{footer}</footer>}
+          {footer && <footer className={styles.footer}>{footer}</footer>}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
+
+AppLayout.displayName = 'AppLayout';
 
 export default AppLayout;

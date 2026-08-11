@@ -74,6 +74,12 @@ O sistema utiliza **data attributes (`data-*`)** para gerenciar estados visuais,
       <td><code>&lt;aside&gt;</code> (Sidebar)</td>
       <td>Sinaliza o estado encolhido da barra lateral no Desktop. Aplica a transição de largura para exibir apenas os ícones e inverte a seta do botão de controle.</td>
     </tr>
+    <tr>
+      <td><code>data-has-topbar</code></td>
+      <td><code>true</code> | <code>false</code></td>
+      <td><code>&lt;Header&gt;</code> (contêiner raiz do cabeçalho)</td>
+      <td>Sinaliza a presença de uma Topbar ativa no cabeçalho. Permite que o seletor <code>:root:has([data-has-topbar='true'])</code> recalcule dinamicamente a variável global <code>--sinc-header-height</code> para somar a altura da Topbar ao Header principal.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -168,4 +174,18 @@ Este elemento não precisa ser criado manualmente nos componentes. O script `dom
 ```html
 <!-- Injetado automaticamente via JavaScript na raiz da página -->
 <div class="sinc-global-overlay" data-global-overlay="true"></div>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 8. Sinalização de Header com Topbar (`data-has-topbar`)
+
+Injetado automaticamente pelo componente `Header` quando a prop `topbar` é passada. Ativa o recálculo reativo da variável `--sinc-header-height` no `:root` para ajustar a rolagem de âncoras e posições de layouts vizinhos:
+
+```html
+<!-- O componente Header sinaliza que possui uma Topbar ativa -->
+<div class="sinc-header" data-has-topbar="true">
+  <div class="sinc-topbar"><!-- Conteúdo da Topbar --></div>
+  <div class="sinc-main"><!-- Conteúdo Principal --></div>
+</div>
 ```

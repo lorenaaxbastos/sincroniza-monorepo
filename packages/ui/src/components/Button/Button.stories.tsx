@@ -163,7 +163,7 @@ const meta: Meta<ButtonStoryProps> = {
       control: 'text',
       description: 'Espaçamento interno entre ícone e texto',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--spacing-2)' },
       },
     },
@@ -171,7 +171,7 @@ const meta: Meta<ButtonStoryProps> = {
       control: 'text',
       description: 'Peso da fonte',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--font-weight-semibold)' },
       },
     },
@@ -179,7 +179,7 @@ const meta: Meta<ButtonStoryProps> = {
       control: 'text',
       description: 'Família tipográfica do botão',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'inherit' },
       },
     },
@@ -187,7 +187,7 @@ const meta: Meta<ButtonStoryProps> = {
       control: 'text',
       description: 'Espessura da borda do botão',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--spacing-px)' },
       },
     },
@@ -195,7 +195,7 @@ const meta: Meta<ButtonStoryProps> = {
       control: 'text',
       description: 'Arredondamento padrão das bordas',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--radii-md)' },
       },
     },
@@ -203,7 +203,7 @@ const meta: Meta<ButtonStoryProps> = {
       control: 'text',
       description: 'Sombra base aplicada quando hasShadow está ativo',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--shadow-sm)' },
       },
     },

@@ -554,7 +554,52 @@ Controle de sobreposição de elementos para evitar conflitos de empilhamento no
 
 <div style={{marginBottom: '6rem'}}></div>
 
-## 6. Transições (`--transition-*`)
+## 6. Tokens globais de painel e layout (`--sinc-layout-panel-*` / `--sinc-header-*`)
+
+Variáveis que padronizam as alturas da navegação e o comportamento de layouts flutuantes (como `Sidebar` e `Header`).
+
+<div style={{marginBottom: '2rem'}}></div>
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Variável CSS</th>
+      <th>Valor Padrão</th>
+      <th>Uso recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--sinc-header-main-height</code></td>
+      <td style={{textAlign: 'center'}}><code>6.4rem</code> (4.8rem mobile)</td>
+      <td>Altura base do cabeçalho principal no desktop e mobile.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-topbar-height</code></td>
+      <td style={{textAlign: 'center'}}><code>3.6rem</code> (3.2rem mobile)</td>
+      <td>Altura da faixa de avisos/ações superiores (Topbar).</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-header-height</code></td>
+      <td style={{textAlign: 'center'}}><em>Dinâmico via CSS</em></td>
+      <td>Calculado automaticamente. É consumido por toda a aplicação para compensação de scroll e eixos virtuais.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-layout-panel-margin</code></td>
+      <td style={{textAlign: 'center'}}><code>0rem</code></td>
+      <td>Margem externa padrão para painéis soltos/flutuantes (ex: Sidebar com respiro).</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-layout-panel-border-radius</code></td>
+      <td style={{textAlign: 'center'}}><code>none</code></td>
+      <td>Arredondamento padrão para contêineres e painéis de layout.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 7. Transições (`--transition-*`)
 
 <div style={{marginBottom: '2rem'}}></div>
 
@@ -587,7 +632,7 @@ Controle de sobreposição de elementos para evitar conflitos de empilhamento no
 
 <div style={{marginBottom: '6rem'}}></div>
 
-## 7. Utilitários e classes globais
+## 8. Utilitários e classes globais
 
 <div style={{marginBottom: '2rem'}}></div>
 
@@ -619,7 +664,7 @@ Todos os elementos interativos recebem automaticamente um outline visível quand
 
 <div style={{marginBottom: '6rem'}}></div>
 
-## 8. Reset de CSS e estilos de base
+## 9. Reset de CSS e estilos de base
 
 O arquivo `global.css` aplica regras globais de normalização para garantir consistência entre navegadores e evitar surpresas de layout.
 
@@ -688,6 +733,22 @@ Quando um modal ou gaveta lateral está aberto, o sistema bloqueia a rolagem do 
   }
 }
 ```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Recálculo dinâmico da altura do Header (`:has()`)
+
+O `:root` detecta automaticamente a presença de uma Topbar ativa na página via atributo `data-has-topbar="true"` e recalcula a variável global `--sinc-header-height` sem necessidade de JavaScript. Isso garante que contêineres vizinhos, o `scroll-padding-top` de âncoras e a `Sidebar` ajustem suas posições instantaneamente.
+
+```css
+:root:has([data-has-topbar='true']) {
+  --sinc-header-height: calc(
+    var(--sinc-header-main-height) + var(--sinc-topbar-height)
+  );
+}
+```
+
+<div style={{marginBottom: '4rem'}}></div>
 
 ### Tratamento de imagens e mídia
 

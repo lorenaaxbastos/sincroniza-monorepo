@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArgTypes, Description, Title } from '@storybook/blocks';
 import type { Meta, StoryObj } from '@storybook/react';
-import { AppLayout } from '@/layouts/AppLayout';
 import { Sidebar } from './Sidebar';
 
 type SidebarStoryProps = React.ComponentProps<typeof Sidebar> &
@@ -32,7 +31,7 @@ const meta: Meta<SidebarStoryProps> = {
       control: 'text',
       description: 'Largura total da Sidebar quando expandida',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: '26rem' },
       },
     },
@@ -40,7 +39,7 @@ const meta: Meta<SidebarStoryProps> = {
       control: 'text',
       description: 'Largura da Sidebar quando recolhida',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: '8rem' },
       },
     },
@@ -48,7 +47,7 @@ const meta: Meta<SidebarStoryProps> = {
       control: 'text',
       description: 'Cor de fundo da Sidebar',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--color-secondary)' },
       },
     },
@@ -56,7 +55,7 @@ const meta: Meta<SidebarStoryProps> = {
       control: 'text',
       description: 'Espaçamento interno da Sidebar no Desktop',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--spacing-6)' },
       },
     },
@@ -64,25 +63,26 @@ const meta: Meta<SidebarStoryProps> = {
       control: 'text',
       description: 'Espaçamento interno da Sidebar no Mobile',
       table: {
-        category: 'CSS Custom Properties',
+        category: 'Variáveis CSS',
         defaultValue: { summary: 'var(--spacing-4)' },
       },
     },
     '--sinc-sidebar-margin': {
       control: 'text',
       description:
-        'Espaçamento/margem externa ao redor do contêiner da sidebar',
+        'Espaçamento/margem externa ao redor do contêiner da sidebar (herda o painel global se não especificado)',
       table: {
-        category: 'CSS Custom Properties',
-        defaultValue: { summary: 'var(--spacing-4)' },
+        category: 'Variáveis CSS',
+        defaultValue: { summary: 'var(--sinc-layout-panel-margin)' },
       },
     },
     '--sinc-sidebar-border-radius': {
       control: 'text',
-      description: 'Arredondamento das bordas do contêiner da sidebar',
+      description:
+        'Arredondamento das bordas do contêiner da sidebar (herda o painel global se não especificado)',
       table: {
-        category: 'CSS Custom Properties',
-        defaultValue: { summary: 'var(--radii-md)' },
+        category: 'Variáveis CSS',
+        defaultValue: { summary: 'var(--sinc-layout-panel-border-radius)' },
       },
     },
   },
@@ -135,19 +135,52 @@ const SidebarContentMock = () => (
   </div>
 );
 
+const StoryWrapper = ({
+  children,
+  title,
+  desc,
+}: {
+  children: React.ReactNode;
+  title: string;
+  desc: string;
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      height: '100vh',
+      width: '100vw',
+      backgroundColor: 'var(--color-bg-canvas, #f4f4f5)',
+      overflow: 'hidden',
+    }}
+  >
+    {children}
+    <main
+      style={{
+        flex: 1,
+        padding: '4rem',
+        overflowY: 'auto',
+      }}
+    >
+      <h1 style={{ margin: '0 0 1rem 0' }}>{title}</h1>
+      <p style={{ margin: 0, color: 'var(--color-gray-600)' }}>{desc}</p>
+    </main>
+  </div>
+);
+
+/* Stories */
+
 export const Padrão: Story = {
   args: {
     defaultCollapsed: false,
     children: <SidebarContentMock />,
   },
   render: (args) => (
-    <AppLayout sidebar={<Sidebar {...args} />}>
-      <h1>Conteúdo principal</h1>
-      <p>
-        Interaja com o botão da Sidebar para ver este conteúdo se ajustando
-        automaticamente ao espaço disponível.
-      </p>
-    </AppLayout>
+    <StoryWrapper
+      title="Sidebar expandida (padrão)"
+      desc="Interaja com o botão de toggle para colapsar/expandir a barra lateral. Note como ela empurra o conteúdo principal de forma independente."
+    >
+      <Sidebar {...args} />
+    </StoryWrapper>
   ),
 };
 
@@ -157,11 +190,30 @@ export const Recolhida: Story = {
     children: <SidebarContentMock />,
   },
   render: (args) => (
-    <AppLayout sidebar={<Sidebar {...args} />}>
-      <h1>Sidebar iniciada recolhida</h1>
-      <p>
-        Utilizando a prop <code>defaultCollapsed</code>.
-      </p>
-    </AppLayout>
+    <StoryWrapper
+      title="Sidebar iniciada recolhida"
+      desc="Iniciada em modo compacto utilizando a propriedade defaultCollapsed={true}."
+    >
+      <Sidebar {...args} />
+    </StoryWrapper>
+  ),
+};
+
+export const PainelFlutuante: Story = {
+  args: {
+    defaultCollapsed: false,
+    children: <SidebarContentMock />,
+    style: {
+      '--sinc-sidebar-margin': '1.6rem',
+      '--sinc-sidebar-border-radius': 'var(--radii-md)',
+    },
+  },
+  render: (args) => (
+    <StoryWrapper
+      title="Sidebar flutuante"
+      desc="Demonstração da Sidebar isolada em painel flutuante com margens e bordas arredondadas personalizadas via variáveis CSS."
+    >
+      <Sidebar {...args} />
+    </StoryWrapper>
   ),
 };

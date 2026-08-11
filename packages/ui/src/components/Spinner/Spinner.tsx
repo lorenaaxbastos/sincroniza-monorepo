@@ -14,7 +14,7 @@ export type SpinnerColor =
   | 'black'
   | 'surface';
 
-export interface SpinnerProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface SpinnerProps extends React.ComponentPropsWithRef<'div'> {
   /** Estilo visual do indicador de carregamento */
   variant?: 'circle' | 'dots' | 'ring';
   /** Tamanho do spinner (preset ou valor numérico em px) */
@@ -40,47 +40,58 @@ const SIZE_MAP: Record<string, string> = {
  * Suporta diferentes variantes visuais, tamanhos predefinidos ou numéricos em pixels/rem,
  * e integra-se nativamente a componentes como o `Button`.
  */
-export const Spinner = ({
-  variant = 'circle',
-  size = 'md',
-  color = 'current',
-  label = 'Carregando...',
-  className = '',
-  style,
-  ...rest
-}: SpinnerProps) => {
-  const computedSize =
-    typeof size === 'number'
-      ? `${(size / 10).toString()}rem`
-      : SIZE_MAP[size] || size;
+export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
+  (
+    {
+      variant = 'circle',
+      size = 'md',
+      color = 'current',
+      label = 'Carregando...',
+      className = '',
+      style,
+      ...rest
+    },
+    ref,
+  ) => {
+    const computedSize =
+      typeof size === 'number'
+        ? `${(size / 10).toString()}rem`
+        : SIZE_MAP[size] || size;
 
-  const colorClass = color !== 'current' ? styles[color] : '';
+    const colorClass = color !== 'current' ? styles[color] : '';
 
-  return (
-    <div
-      className={`${styles.wrapper} ${colorClass} ${className}`.trim()}
-      style={
-        { '--sinc-spinner-size': computedSize, ...style } as React.CSSProperties
-      }
-      role="status"
-      aria-live="polite"
-      {...rest}
-    >
-      {variant === 'circle' && <div className={styles.circle} />}
+    return (
+      <div
+        ref={ref}
+        className={`${styles.wrapper} ${colorClass} ${className}`.trim()}
+        style={
+          {
+            '--sinc-spinner-size': computedSize,
+            ...style,
+          } as React.CSSProperties
+        }
+        role="status"
+        aria-live="polite"
+        {...rest}
+      >
+        {variant === 'circle' && <div className={styles.circle} />}
 
-      {variant === 'dots' && (
-        <div className={styles.dots}>
-          <span />
-          <span />
-          <span />
-        </div>
-      )}
+        {variant === 'dots' && (
+          <div className={styles.dots}>
+            <span />
+            <span />
+            <span />
+          </div>
+        )}
 
-      {variant === 'ring' && <div className={styles.ring} />}
+        {variant === 'ring' && <div className={styles.ring} />}
 
-      <span className="sinc-sr-only">{label}</span>
-    </div>
-  );
-};
+        <span className="sinc-sr-only">{label}</span>
+      </div>
+    );
+  },
+);
+
+Spinner.displayName = 'Spinner';
 
 export default Spinner;

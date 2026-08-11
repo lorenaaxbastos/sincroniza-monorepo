@@ -1,0 +1,102 @@
+.header {
+  --_bg: var(--sinc-header-bg, var(--color-white));
+  --_border: var(
+    --sinc-header-border,
+    var(--spacing-px) solid var(--color-gray-300)
+  );
+  --_shadow: var(--sinc-header-shadow, none);
+  --_padding: var(--sinc-header-padding-desktop, var(--spacing-2));
+  --_padding-mobile: var(--sinc-header-padding-mobile, var(--spacing-1));
+  --_margin: var(--sinc-header-margin, var(--sinc-layout-panel-margin));
+  --_border-radius: var(
+    --sinc-header-border-radius,
+    var(--sinc-layout-panel-border-radius)
+  );
+
+  position: relative;
+  width: 100%;
+  z-index: var(--z-index-fixed);
+}
+
+.isFixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.isTransparent {
+  .main {
+    background-color: transparent;
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  &.isScrolled .main {
+    background-color: var(--_bg);
+    border-bottom: var(--_border);
+    box-shadow: var(--_shadow);
+  }
+}
+
+.topbar {
+  width: 100%;
+  height: var(--sinc-topbar-height);
+
+  @media (max-width: 48em) {
+    height: var(--sinc-topbar-height-mobile);
+  }
+}
+
+.main {
+  width: calc(100% - var(--_margin) * 2);
+  height: var(--sinc-header-main-height);
+  display: flex;
+  align-items: center;
+  margin: var(--_margin) auto;
+  padding: var(--_padding);
+  background-color: var(--_bg);
+  border-bottom: var(--_border);
+  border-radius: var(--_border-radius);
+  box-shadow: var(--_shadow);
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+
+  @media (max-width: 48em) {
+    height: var(--sinc-header-main-height-mobile);
+    padding: var(--_padding-mobile);
+  }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+}
+
+.start,
+.center,
+.end {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.start {
+  justify-content: flex-start;
+  flex: 1;
+  min-width: 0;
+}
+
+.center {
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.end {
+  justify-content: flex-end;
+  flex: 1;
+}
