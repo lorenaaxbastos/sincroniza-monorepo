@@ -5,29 +5,12 @@ import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { Button } from './Button';
 import type {
   ButtonColor,
+  ButtonProps,
   ButtonSize,
   ButtonVariant,
-  ButtonWidth,
 } from './Button';
 
-type ButtonStoryProps = {
-  variant?: ButtonVariant;
-  color?: ButtonColor;
-  size?: ButtonSize;
-  width?: ButtonWidth;
-  isPill?: boolean;
-  isUppercase?: boolean;
-  isIconOnly?: boolean;
-  hasShadow?: boolean;
-  isLoading?: boolean;
-  disabled?: boolean;
-  as?: 'button' | 'a';
-  href?: string;
-  isExternal?: boolean;
-  type?: 'button' | 'submit' | 'reset';
-  children?: React.ReactNode;
-  className?: string;
-} & Record<string, unknown>;
+type ButtonStoryProps = ButtonProps & Record<string, unknown>;
 
 const meta: Meta<ButtonStoryProps> = {
   title: 'Componentes/Button',
@@ -45,173 +28,79 @@ const meta: Meta<ButtonStoryProps> = {
     },
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['solid', 'subtle', 'outline', 'ghost'],
-      description: 'Estilo visual do botão',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'solid' },
-      },
+    variant: { table: { category: 'Propriedades (Props)' } },
+    color: { table: { category: 'Propriedades (Props)' } },
+    size: { table: { category: 'Propriedades (Props)' } },
+    width: { table: { category: 'Propriedades (Props)' } },
+    isPill: { table: { category: 'Propriedades (Props)' } },
+    isUppercase: { table: { category: 'Propriedades (Props)' } },
+    isIconOnly: { table: { category: 'Propriedades (Props)' } },
+    hasShadow: { table: { category: 'Propriedades (Props)' } },
+    isLoading: { table: { category: 'Propriedades (Props)' } },
+    disabled: { table: { category: 'Propriedades (Props)' } },
+    as: { table: { category: 'Propriedades (Props)' } },
+    href: { table: { category: 'Propriedades (Props)' } },
+    isExternal: { table: { category: 'Propriedades (Props)' } },
+    type: { table: { category: 'Propriedades (Props)' } },
+    target: { table: { category: 'Propriedades (Props)' } },
+    rel: { table: { category: 'Propriedades (Props)' } },
+    children: { table: { category: 'Propriedades (Props)' } },
+    className: { table: { category: 'Propriedades (Props)' } },
+    '--sinc-btn-color': {
+      control: 'text',
+      description: 'Cor do texto do botão',
+      table: { category: 'Variáveis CSS' },
     },
-    color: {
-      control: 'select',
-      options: [
-        'primary',
-        'secondary',
-        'tertiary',
-        'quaternary',
-        'success',
-        'warning',
-        'error',
-        'info',
-        'light',
-        'dark',
-        'white',
-        'black',
-        'surface',
-      ],
-      description: 'Cor temática do botão',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'primary' },
-      },
+    '--sinc-btn-bg': {
+      control: 'text',
+      description: 'Cor de fundo do botão',
+      table: { category: 'Variáveis CSS' },
     },
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg'],
-      description: 'Tamanho do botão',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'md' },
-      },
-    },
-    width: {
-      control: 'radio',
-      options: ['fit', 'full'],
-      description: 'Ajuste de largura do botão',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'fit' },
-      },
-    },
-    isPill: {
-      control: 'boolean',
-      description: 'Aplica bordas totalmente arredondadas (pílula)',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'false' },
-      },
-    },
-    isUppercase: {
-      control: 'boolean',
-      description: 'Transforma o texto em caixa alta',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'false' },
-      },
-    },
-    isIconOnly: {
-      control: 'boolean',
-      description:
-        'Ajusta o botão para formato quadrado/circular perfeito quando contiver apenas um ícone',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'false' },
-      },
-    },
-    hasShadow: {
-      control: 'boolean',
-      description: 'Adiciona elevação via box-shadow',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'false' },
-      },
-    },
-    isLoading: {
-      control: 'boolean',
-      description:
-        'Indica estado de carregamento, torna-se desabilitado e substitui o conteúdo pelo Spinner',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'false' },
-      },
-    },
-    disabled: {
-      control: 'boolean',
-      description: 'Desabilita interações com o botão',
-      table: {
-        category: 'Propriedades (Props)',
-        defaultValue: { summary: 'false' },
-      },
-    },
-    as: {
-      control: 'select',
-      options: ['button', 'a'],
-      description: 'Força o elemento HTML base (`button` ou `a`)',
-      table: { category: 'Propriedades (Props)' },
-    },
-    children: {
-      description: 'Conteúdo do botão (texto, ícones ou elementos)',
-      table: { category: 'Propriedades (Props)' },
-    },
-    className: {
-      description: 'Classes CSS adicionais aplicadas ao elemento base do botão',
-      table: { category: 'Propriedades (Props)' },
+    '--sinc-btn-padding': {
+      control: 'text',
+      description: 'Espaçamento interno do botão',
+      table: { category: 'Variáveis CSS' },
     },
     '--sinc-btn-gap': {
       control: 'text',
       description: 'Espaçamento interno entre ícone e texto',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--spacing-2)' },
-      },
+      table: { category: 'Variáveis CSS' },
+    },
+    '--sinc-btn-font-size': {
+      control: 'text',
+      description: 'Tamanho da fonte tipográfica',
+      table: { category: 'Variáveis CSS' },
     },
     '--sinc-btn-font-weight': {
       control: 'text',
-      description: 'Peso da fonte',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--font-weight-semibold)' },
-      },
+      description: 'Peso da fonte do botão',
+      table: { category: 'Variáveis CSS' },
     },
     '--sinc-btn-font-family': {
       control: 'text',
       description: 'Família tipográfica do botão',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'inherit' },
-      },
+      table: { category: 'Variáveis CSS' },
     },
-    '--sinc-btn-border-width': {
+    '--sinc-btn-border': {
       control: 'text',
-      description: 'Espessura da borda do botão',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--spacing-px)' },
-      },
+      description: 'Definição da borda do botão (largura, estilo e cor)',
+      table: { category: 'Variáveis CSS' },
     },
     '--sinc-btn-border-radius': {
       control: 'text',
-      description: 'Arredondamento padrão das bordas',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--radii-md)' },
-      },
+      description: 'Arredondamento das bordas do botão',
+      table: { category: 'Variáveis CSS' },
     },
     '--sinc-btn-shadow': {
       control: 'text',
       description: 'Sombra base aplicada quando hasShadow está ativo',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--shadow-sm)' },
-      },
+      table: { category: 'Variáveis CSS' },
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<ButtonStoryProps>;
+type Story = StoryObj<ButtonProps>;
 
 const StoryRow = ({
   label,

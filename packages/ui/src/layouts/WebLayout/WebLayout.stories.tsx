@@ -4,7 +4,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@/components/Button';
 import { NavToggle } from '@/components/NavToggle';
 import { Container } from '@/layouts/Container';
+import { Grid } from '@/layouts/Grid';
 import { Header } from '@/layouts/Header';
+import { Stack } from '@/layouts/Stack';
 import { WebLayout } from './WebLayout';
 
 type WebLayoutStoryProps = React.ComponentProps<typeof WebLayout> &
@@ -126,14 +128,24 @@ const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
 };
 
 const WebNavLinks = () => (
-  <nav
-    style={{
-      display: 'flex',
-      gap: '2.4rem',
-      fontWeight: 500,
-      fontSize: '1.4rem',
-    }}
+  <Stack
+    as="nav"
+    direction="row"
+    gap="lg"
+    align="center"
+    className="desktop-nav"
+    style={{ fontWeight: 500, fontSize: '1.4rem' }}
   >
+    <style>{`
+      .desktop-nav {
+        display: none !important;
+      }
+      @media (min-width: 48em) {
+        .desktop-nav {
+          display: flex !important;
+        }
+      }
+    `}</style>
     <a href="#solucoes" style={{ color: 'inherit', textDecoration: 'none' }}>
       Soluções
     </a>
@@ -143,7 +155,7 @@ const WebNavLinks = () => (
     <a href="#casos" style={{ color: 'inherit', textDecoration: 'none' }}>
       Casos de Sucesso
     </a>
-  </nav>
+  </Stack>
 );
 
 const FooterMock = () => (
@@ -177,26 +189,13 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
                 Sincroniza
               </strong>
             }
-            center={
-              <div className="desktop-nav">
-                <style>{`
-                  .desktop-nav { display: none; }
-                  @media(min-width: 48em) { .desktop-nav { display: block; } }
-                `}</style>
-                <WebNavLinks />
-              </div>
-            }
+            center={<WebNavLinks />}
             end={
-              <div
-                style={{ display: 'flex', alignItems: 'center', gap: '1.6rem' }}
-              >
-                <div
-                  className="desktop-actions"
-                  style={{ display: 'flex', gap: '1.2rem' }}
-                >
+              <Stack direction="row" align="center" gap="md">
+                <div className="desktop-actions">
                   <style>{`
                     .desktop-actions { display: none !important; }
-                    @media(min-width: 48em) { .desktop-actions { display: flex !important; } }
+                    @media(min-width: 48em) { .desktop-actions { display: flex !important; gap: 1.2rem; } }
                   `}</style>
                   <Button variant="ghost" color="primary">
                     Entrar
@@ -213,7 +212,7 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
                     buttonProps={{ color: 'primary', variant: 'solid' }}
                   />
                 </div>
-              </div>
+              </Stack>
             }
           />
         }
@@ -234,13 +233,10 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
           data-state="closed"
           data-scroll-lock
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2.4rem',
-              marginTop: 'var(--sinc-header-height)',
-            }}
+          <Stack
+            direction="column"
+            gap="xl"
+            style={{ marginTop: 'var(--sinc-header-height)' }}
           >
             <WebNavLinks />
             <hr
@@ -252,7 +248,7 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
             <Button color="primary" width="full">
               Falar com consultor
             </Button>
-          </div>
+          </Stack>
         </div>
 
         <section
@@ -284,21 +280,14 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
               Nossa plataforma conecta escolas, professores e alunos para
               construir o futuro da aprendizagem.
             </p>
-            <div
-              style={{
-                display: 'flex',
-                gap: '1.6rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-              }}
-            >
+            <Stack direction="row" gap="md" justify="center" wrap>
               <Button size="lg" color="primary" hasShadow>
                 Começar agora
               </Button>
               <Button size="lg" variant="outline" color="primary">
                 Conheça o sistema
               </Button>
-            </div>
+            </Stack>
           </Container>
         </section>
 
@@ -306,13 +295,7 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
           style={{ padding: '8rem 0', backgroundColor: 'var(--color-white)' }}
         >
           <Container size="xl" padding="md">
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(30rem, 1fr))',
-                gap: '3.2rem',
-              }}
-            >
+            <Grid minItemWidth="30rem" gap="xl">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -346,7 +329,7 @@ const LandingPageApp = (args: WebLayoutStoryProps) => {
                   </p>
                 </div>
               ))}
-            </div>
+            </Grid>
           </Container>
         </section>
       </WebLayout>

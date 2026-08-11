@@ -1,0 +1,178 @@
+.badge {
+  --_gap: var(--sinc-badge-gap, var(--spacing-1));
+  --_font-weight: var(--sinc-badge-font-weight, var(--font-weight-semibold));
+  --_font-family: var(--sinc-badge-font-family, inherit);
+  --_font-size: var(--sinc-badge-font-size, var(--font-size-xs));
+  --_padding: var(
+    --sinc-badge-padding,
+    calc(var(--spacing-1) * 1.5) var(--spacing-3)
+  );
+  --_border: var(--sinc-badge-border, var(--spacing-px) solid transparent);
+  --_border-radius: var(--sinc-badge-border-radius, var(--radii-sm));
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_gap);
+  width: fit-content;
+  white-space: nowrap;
+  padding: var(--_padding);
+  font-size: var(--_font-size);
+  font-family: var(--_font-family);
+  font-weight: var(--_font-weight);
+  line-height: 1;
+  border: var(--_border);
+  border-radius: var(--_border-radius);
+  user-select: none;
+
+  &.primary {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-primary);
+  }
+
+  &.secondary {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-secondary);
+  }
+
+  &.tertiary {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-tertiary);
+  }
+
+  &.quaternary {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-quaternary);
+  }
+
+  &.success {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-feedback-success);
+  }
+
+  &.warning {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-feedback-warning);
+  }
+
+  &.error {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-feedback-error);
+  }
+
+  &.info {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-feedback-info);
+  }
+
+  &.light {
+    --_badge-text: var(--color-gray-900);
+    --_badge-color: var(--color-gray-200);
+  }
+
+  &.dark {
+    --_badge-text: var(--color-gray-100);
+    --_badge-color: var(--color-gray-900);
+  }
+
+  &.white {
+    --_badge-text: var(--color-black);
+    --_badge-color: var(--color-white);
+  }
+
+  &.black {
+    --_badge-text: var(--color-white);
+    --_badge-color: var(--color-black);
+  }
+
+  &.surface {
+    --_badge-text: var(--color-gray-700);
+    --_badge-color: var(--color-gray-400);
+
+    &.subtle {
+      color: var(--sinc-badge-color, var(--_badge-text));
+      background-color: var(
+        --sinc-badge-bg,
+        color-mix(in srgb, var(--_badge-text), transparent 90%)
+      );
+      --_border: var(
+        --sinc-badge-border,
+        var(--spacing-px) solid var(--_badge-color)
+      );
+    }
+
+    &.outline {
+      color: var(--sinc-badge-color, var(--_badge-text));
+      --_border: var(
+        --sinc-badge-border,
+        var(--spacing-px) solid var(--_badge-color)
+      );
+    }
+  }
+
+  &.solid {
+    background-color: var(--sinc-badge-bg, var(--_badge-color));
+    color: var(--sinc-badge-color, var(--_badge-text));
+  }
+
+  &.subtle {
+    background-color: var(
+      --sinc-badge-bg,
+      color-mix(in srgb, var(--_badge-color), transparent 85%)
+    );
+    color: var(--sinc-badge-color, var(--_badge-color));
+    --_border: var(
+      --sinc-badge-border,
+      var(--spacing-px) solid
+        color-mix(in srgb, var(--_badge-color), transparent 75%)
+    );
+  }
+
+  &.outline {
+    background-color: var(--sinc-badge-bg, transparent);
+    color: var(--sinc-badge-color, var(--_badge-color));
+    --_border: var(
+      --sinc-badge-border,
+      var(--spacing-px) solid var(--_badge-color)
+    );
+  }
+
+  &.sm {
+    --_padding: var(--sinc-badge-padding, var(--spacing-1) var(--spacing-2));
+    --_font-size: var(--sinc-badge-font-size, var(--font-size-xs));
+  }
+
+  &.md {
+    --_padding: var(
+      --sinc-badge-padding,
+      calc(var(--spacing-1) * 1.5) var(--spacing-3)
+    );
+    --_font-size: var(--sinc-badge-font-size, var(--font-size-xs));
+  }
+
+  &.lg {
+    --_padding: var(--sinc-badge-padding, var(--spacing-2) var(--spacing-4));
+    --_font-size: var(--sinc-badge-font-size, var(--font-size-sm));
+  }
+
+  &.pill {
+    --_border-radius: var(--sinc-badge-border-radius, var(--radii-pill));
+  }
+
+  &.uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: var(--radii-round, 50%);
+    background-color: currentColor;
+    flex-shrink: 0;
+  }
+
+  & :global(svg) {
+    flex-shrink: 0;
+  }
+}

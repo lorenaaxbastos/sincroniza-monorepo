@@ -4,8 +4,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@/components/Button';
 import { NavToggle } from '@/components/NavToggle';
 import { Container } from '@/layouts/Container';
+import { Grid } from '@/layouts/Grid';
 import { Header } from '@/layouts/Header';
 import { Sidebar } from '@/layouts/Sidebar';
+import { Stack } from '@/layouts/Stack';
 import { AppLayout } from './AppLayout';
 
 type AppLayoutStoryProps = React.ComponentProps<typeof AppLayout> &
@@ -77,7 +79,7 @@ const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
 
       if (toggleBtn) {
         toggleBtn.setAttribute('aria-expanded', 'false');
-        toggleBtn.removeAttribute('data-active'); // <-- Faltava essa linha!
+        toggleBtn.removeAttribute('data-active');
       }
     };
 
@@ -166,18 +168,11 @@ const SearchMock = () => (
 );
 
 const SidebarNavMock = () => (
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '2.4rem',
-      height: '100%',
-    }}
-  >
+  <Stack direction="column" gap="xl" style={{ height: '100%' }}>
     <strong style={{ color: 'var(--color-white)', fontSize: '1.8rem' }}>
       Dashboard
     </strong>
-    <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+    <Stack as="nav" direction="column" gap="xs">
       {['Visão Geral', 'Alunos', 'Turmas', 'Desempenho', 'Configurações'].map(
         (item) => (
           <button
@@ -200,8 +195,8 @@ const SidebarNavMock = () => (
           </button>
         ),
       )}
-    </nav>
-  </div>
+    </Stack>
+  </Stack>
 );
 
 const DashboardApp = (args: AppLayoutStoryProps) => {
@@ -210,8 +205,8 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
   const handleSync = () => {
     setIsSyncing(true);
     setTimeout(() => {
-      return (setIsSyncing(false), 2000);
-    });
+      setIsSyncing(false);
+    }, 2000);
   };
 
   return (
@@ -227,9 +222,7 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
         header={
           <Header
             start={
-              <div
-                style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}
-              >
+              <Stack align="center" gap="xs">
                 <style>{`
                   .app-mobile-nav { display: none; }
                   @media(max-width: 48em) { .app-mobile-nav { display: block; } }
@@ -238,7 +231,7 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
                   <NavToggle targetSelector="#app-sidebar" />
                 </div>
                 <BrandMock />
-              </div>
+              </Stack>
             }
             center={
               <div
@@ -274,22 +267,13 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
         }
       >
         <Container size="xl" padding="md">
-          <div
-            style={{
-              padding: '3.2rem 0',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2.4rem',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                flexWrap: 'wrap',
-                gap: '1.6rem',
-              }}
+          <Stack direction="column" gap="xl" style={{ padding: '3.2rem 0' }}>
+            <Stack
+              direction="row"
+              justify="space-between"
+              align="flex-start"
+              wrap
+              gap="md"
             >
               <div>
                 <h1 style={{ margin: '0 0 0.8rem 0', fontSize: '2.4rem' }}>
@@ -306,15 +290,9 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
               >
                 Sincronizar Dados
               </Button>
-            </div>
+            </Stack>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(28rem, 1fr))',
-                gap: '1.6rem',
-              }}
-            >
+            <Grid minItemWidth="28rem" gap="md">
               {[
                 { title: 'Total de Alunos', value: '14.230' },
                 { title: 'Média de Notas', value: '8.4' },
@@ -350,7 +328,7 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
                   </strong>
                 </div>
               ))}
-            </div>
+            </Grid>
 
             <div
               style={{
@@ -369,7 +347,7 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
                 Área de gráficos longo (role para testar o scroll do AppLayout)
               </p>
             </div>
-          </div>
+          </Stack>
         </Container>
       </AppLayout>
     </>

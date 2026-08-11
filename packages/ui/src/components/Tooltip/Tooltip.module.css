@@ -1,0 +1,113 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+
+  &:is(:hover, :focus-within):not(.isDisabled) .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.tooltip {
+  --_color: var(--sinc-tooltip-color, var(--color-text-inverse));
+  --_bg: var(--sinc-tooltip-bg, var(--color-gray-900));
+  --_padding: var(--sinc-tooltip-padding, var(--spacing-1) var(--spacing-3));
+  --_font-size: var(--sinc-tooltip-font-size, var(--font-size-xs));
+  --_font-weight: var(--sinc-tooltip-font-weight, var(--font-weight-regular));
+  --_line-height: var(--sinc-tooltip-line-height, var(--line-height-shorter));
+  --_text-align: var(--sinc-tooltip-text-align, left);
+  --_border-radius: var(--sinc-tooltip-border-radius, var(--radii-sm));
+  --_shadow: var(--sinc-tooltip-shadow, var(--shadow-md));
+
+  display: var(--sinc-tooltip-display, block);
+  position: absolute;
+  z-index: var(--z-index-tooltip);
+  padding: var(--_padding);
+  font-size: var(--_font-size);
+  font-weight: var(--_font-weight);
+  line-height: var(--_line-height);
+  text-align: var(--_text-align);
+  color: var(--_color);
+  background-color: var(--_bg);
+  border-radius: var(--_border-radius);
+  box-shadow: var(--_shadow);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast);
+
+  &.top {
+    bottom: calc(100% + var(--spacing-2));
+    left: 50%;
+    transform: translateX(-50%);
+
+    &.align-start {
+      left: 0;
+      transform: none;
+    }
+
+    &.align-end {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+  }
+
+  &.bottom {
+    top: calc(100% + var(--spacing-2));
+    left: 50%;
+    transform: translateX(-50%);
+
+    &.align-start {
+      left: 0;
+      transform: none;
+    }
+
+    &.align-end {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+  }
+
+  &.left {
+    right: calc(100% + var(--spacing-2));
+    top: 50%;
+    transform: translateY(-50%);
+
+    &.align-start {
+      top: 0;
+      transform: none;
+    }
+
+    &.align-end {
+      top: auto;
+      bottom: 0;
+      transform: none;
+    }
+  }
+
+  &.right {
+    left: calc(100% + var(--spacing-2));
+    top: 50%;
+    transform: translateY(-50%);
+
+    &.align-start {
+      top: 0;
+      transform: none;
+    }
+
+    &.align-end {
+      top: auto;
+      bottom: 0;
+      transform: none;
+    }
+  }
+
+  & :global(svg) {
+    flex-shrink: 0;
+  }
+}

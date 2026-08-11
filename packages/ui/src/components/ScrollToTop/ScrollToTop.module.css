@@ -1,0 +1,28 @@
+.scrollToTop {
+  --_shadow: var(--sinc-scroll-to-top-shadow, var(--shadow-sm));
+
+  position: fixed;
+  bottom: var(--spacing-6);
+  right: var(--spacing-6);
+  z-index: var(--z-index-sticky, 200);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(1rem);
+  transition:
+    opacity var(--transition-smooth),
+    visibility var(--transition-smooth),
+    transform var(--transition-smooth);
+  box-shadow: var(--_shadow);
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollToTop {
+    transition: opacity var(--transition-fast);
+  }
+}

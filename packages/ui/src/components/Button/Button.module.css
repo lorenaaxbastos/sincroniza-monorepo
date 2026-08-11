@@ -2,7 +2,10 @@
   --_gap: var(--sinc-btn-gap, var(--spacing-2));
   --_font-weight: var(--sinc-btn-font-weight, var(--font-weight-semibold));
   --_font-family: var(--sinc-btn-font-family, inherit);
-  --_border-width: var(--sinc-btn-border-width, var(--spacing-px));
+  --_font-size: var(--sinc-btn-font-size, var(--font-size-sm));
+  --_padding: var(--sinc-btn-padding, var(--spacing-2) var(--spacing-4));
+  --_border-width: var(--spacing-px);
+  --_border-color: transparent;
   --_border-radius: var(--sinc-btn-border-radius, var(--radii-md));
   --_shadow: var(--sinc-btn-shadow, var(--shadow-sm));
 
@@ -10,11 +13,16 @@
   align-items: center;
   justify-content: center;
   gap: var(--_gap);
-  text-decoration: none;
-  border: var(--_border-width) solid transparent;
-  border-radius: var(--_border-radius);
+  padding: var(--_padding);
+  font-size: var(--_font-size);
   font-family: var(--_font-family);
   font-weight: var(--_font-weight);
+  text-decoration: none;
+  border: var(
+    --sinc-btn-border,
+    var(--_border-width) solid var(--_border-color)
+  );
+  border-radius: var(--_border-radius);
   cursor: pointer;
   white-space: nowrap;
   transition:
@@ -154,28 +162,34 @@
     );
 
     &.subtle {
-      color: var(--_btn-text);
-      background-color: color-mix(in srgb, var(--_btn-text), transparent 90%);
-      border: var(--_border-width) solid var(--_btn-color);
+      color: var(--sinc-btn-color, var(--_btn-text));
+      background-color: var(
+        --sinc-btn-bg,
+        color-mix(in srgb, var(--_btn-text), transparent 90%)
+      );
+      --_border-color: var(--_btn-color);
     }
 
     &.outline {
-      color: var(--_btn-text);
-      border-color: var(--_btn-color);
+      color: var(--sinc-btn-color, var(--_btn-text));
+      --_border-color: var(--_btn-color);
     }
 
     &.ghost {
-      color: var(--_btn-text);
+      color: var(--sinc-btn-color, var(--_btn-text));
 
       &:hover:not(:disabled):not([aria-disabled='true']) {
-        background-color: color-mix(in srgb, var(--_btn-text), transparent 90%);
+        background-color: var(
+          --sinc-btn-bg,
+          color-mix(in srgb, var(--_btn-text), transparent 90%)
+        );
       }
     }
   }
 
   &.solid {
-    color: var(--_btn-text);
-    background-color: var(--_btn-color);
+    color: var(--sinc-btn-color, var(--_btn-text));
+    background-color: var(--sinc-btn-bg, var(--_btn-color));
 
     &:hover:not(:disabled):not([aria-disabled='true']) {
       background-color: var(--_btn-color-hover);
@@ -183,67 +197,72 @@
   }
 
   &.subtle {
-    color: var(--_btn-color);
-    background-color: color-mix(in srgb, var(--_btn-color), transparent 85%);
-    border: var(--_border-width) solid
-      color-mix(in srgb, var(--_btn-color), transparent 70%);
+    color: var(--sinc-btn-color, var(--_btn-color));
+    background-color: var(
+      --sinc-btn-bg,
+      color-mix(in srgb, var(--_btn-color), transparent 85%)
+    );
+    --_border-color: color-mix(in srgb, var(--_btn-color), transparent 70%);
 
     &:hover:not(:disabled):not([aria-disabled='true']) {
-      color: var(--_btn-text);
-      background-color: var(--_btn-color);
-      border-color: var(--_btn-color);
+      color: var(--sinc-btn-color, var(--_btn-text));
+      background-color: var(--sinc-btn-bg, var(--_btn-color));
+      --_border-color: var(--_btn-color);
     }
   }
 
   &.outline {
-    color: var(--_btn-color);
-    background-color: transparent;
-    border-color: var(--_btn-color);
+    color: var(--sinc-btn-color, var(--_btn-color));
+    background-color: var(--sinc-btn-bg, transparent);
+    --_border-color: var(--_btn-color);
 
     &:hover:not(:disabled):not([aria-disabled='true']) {
-      color: var(--_btn-text);
-      background-color: var(--_btn-color);
+      color: var(--sinc-btn-color, var(--_btn-text));
+      background-color: var(--sinc-btn-bg, var(--_btn-color));
     }
   }
 
   &.ghost {
-    color: var(--_btn-color);
-    background-color: transparent;
+    color: var(--sinc-btn-color, var(--_btn-color));
+    background-color: var(--sinc-btn-bg, transparent);
 
     &:hover:not(:disabled):not([aria-disabled='true']) {
-      background-color: color-mix(in srgb, var(--_btn-color), transparent 85%);
+      background-color: var(
+        --sinc-btn-bg,
+        color-mix(in srgb, var(--_btn-color), transparent 85%)
+      );
     }
   }
 
   &.sm {
-    padding: var(--spacing-1) var(--spacing-3);
-    font-size: var(--font-size-xs);
-    border-radius: var(--radii-sm);
+    --_padding: var(--sinc-btn-padding, var(--spacing-1) var(--spacing-3));
+    --_font-size: var(--sinc-btn-font-size, var(--font-size-xs));
+    --_border-radius: var(--sinc-btn-border-radius, var(--radii-sm));
   }
 
   &.md {
-    padding: var(--spacing-2) var(--spacing-4);
-    font-size: var(--font-size-sm);
+    --_padding: var(--sinc-btn-padding, var(--spacing-2) var(--spacing-4));
+    --_font-size: var(--sinc-btn-font-size, var(--font-size-sm));
   }
 
   &.lg {
-    padding: var(--spacing-2) var(--spacing-5);
-    font-size: var(--font-size-md);
+    --_padding: var(--sinc-btn-padding, var(--spacing-2) var(--spacing-5));
+    --_font-size: var(--sinc-btn-font-size, var(--font-size-md));
   }
 
   &.iconOnly {
     aspect-ratio: 1 / 1;
 
     &.sm {
-      padding: var(--spacing-1);
+      --_padding: var(--sinc-btn-padding, var(--spacing-1));
     }
 
     &.md {
-      padding: var(--spacing-2);
+      --_padding: var(--sinc-btn-padding, var(--spacing-2));
     }
 
     &.lg {
-      padding: var(--spacing-3);
+      --_padding: var(--sinc-btn-padding, var(--spacing-3));
     }
   }
 
@@ -256,7 +275,7 @@
   }
 
   &.pill {
-    border-radius: var(--radii-pill);
+    --_border-radius: var(--sinc-btn-border-radius, var(--radii-pill));
   }
 
   &.uppercase {
@@ -274,5 +293,9 @@
     opacity: 0.6;
     cursor: not-allowed !important;
     pointer-events: none;
+  }
+
+  & :global(svg) {
+    flex-shrink: 0;
   }
 }

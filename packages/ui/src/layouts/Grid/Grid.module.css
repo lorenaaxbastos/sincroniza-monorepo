@@ -1,0 +1,78 @@
+.grid {
+  --_cols: var(--sinc-grid-cols);
+  --_gap: var(--sinc-grid-gap);
+  --_align: var(--sinc-grid-align);
+  --_justify: var(--sinc-grid-justify);
+
+  display: grid;
+  grid-template-columns: var(--_cols);
+  gap: var(--_gap);
+  align-items: var(--_align);
+  justify-items: var(--_justify);
+  width: 100%;
+
+  @media (max-width: 80em) {
+    --_cols: var(
+      --sinc-grid-cols-xl,
+      var(--sinc-grid-cols, repeat(1, minmax(0, 1fr)))
+    );
+    --_gap: var(--sinc-grid-gap-xl, var(--sinc-grid-gap, var(--spacing-4)));
+  }
+
+  @media (max-width: 64em) {
+    --_cols: var(
+      --sinc-grid-cols-lg,
+      var(--sinc-grid-cols-xl, var(--sinc-grid-cols, repeat(1, minmax(0, 1fr))))
+    );
+    --_gap: var(
+      --sinc-grid-gap-lg,
+      var(--sinc-grid-gap-xl, var(--sinc-grid-gap, var(--spacing-4)))
+    );
+  }
+
+  @media (max-width: 48em) {
+    --_cols: var(
+      --sinc-grid-cols-md,
+      var(
+        --sinc-grid-cols-lg,
+        var(
+          --sinc-grid-cols-xl,
+          var(--sinc-grid-cols, repeat(1, minmax(0, 1fr)))
+        )
+      )
+    );
+    --_gap: var(
+      --sinc-grid-gap-md,
+      var(
+        --sinc-grid-gap-lg,
+        var(--sinc-grid-gap-xl, var(--sinc-grid-gap, var(--spacing-4)))
+      )
+    );
+  }
+
+  @media (max-width: 36em) {
+    --_cols: var(
+      --sinc-grid-cols-sm,
+      var(
+        --sinc-grid-cols-md,
+        var(
+          --sinc-grid-cols-lg,
+          var(
+            --sinc-grid-cols-xl,
+            var(--sinc-grid-cols, repeat(1, minmax(0, 1fr)))
+          )
+        )
+      )
+    );
+    --_gap: var(
+      --sinc-grid-gap-sm,
+      var(
+        --sinc-grid-gap-md,
+        var(
+          --sinc-grid-gap-lg,
+          var(--sinc-grid-gap-xl, var(--sinc-grid-gap, var(--spacing-4)))
+        )
+      )
+    );
+  }
+}

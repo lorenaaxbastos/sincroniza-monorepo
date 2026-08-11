@@ -71,10 +71,12 @@
 }
 
 .container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas: 'start center end';
   align-items: center;
-  justify-content: space-between;
   gap: var(--spacing-4);
+  width: 100%;
 }
 
 .start,
@@ -83,20 +85,23 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-}
-
-.start {
-  justify-content: flex-start;
-  flex: 1;
   min-width: 0;
 }
 
+.start {
+  grid-area: start;
+  justify-self: start;
+  justify-content: flex-start;
+}
+
 .center {
+  grid-area: center;
+  justify-self: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
 .end {
+  grid-area: end;
+  justify-self: end;
   justify-content: flex-end;
-  flex: 1;
 }

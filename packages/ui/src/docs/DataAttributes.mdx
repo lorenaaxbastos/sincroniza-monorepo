@@ -33,6 +33,18 @@ O sistema utiliza **data attributes (`data-*`)** para gerenciar estados visuais,
       <td>Ganchos JS/Astro para vincular os scripts de troca de tema sem depender de classes CSS.</td>
     </tr>
     <tr>
+      <td><code>data-nav-toggle</code></td>
+      <td>Atributo booleano (presente)</td>
+      <td><code>&lt;button&gt;</code> do <code>NavToggle</code></td>
+      <td>Identifica o botão de alternância de navegação utilizado para abrir/fechar menus laterais e gavetas móveis.</td>
+    </tr>
+    <tr>
+      <td><code>data-target</code></td>
+      <td>Seletor CSS (ex: <code>.sinc-sidebar</code>, <code>#menu-mobile</code>)</td>
+      <td><code>&lt;button&gt;</code> do <code>NavToggle</code> ou gatilhos</td>
+      <td>Especifica o seletor CSS do elemento alvo que terá seu atributo <code>data-state</code> alternado entre <code>open</code> e <code>closed</code> ao ser acionado.</td>
+    </tr>
+    <tr>
       <td><code>data-scroll-lock</code></td>
       <td>Atributo booleano (presente)</td>
       <td>Modais, drawers e dialogs flutuantes</td>
@@ -188,4 +200,21 @@ Injetado automaticamente pelo componente `Header` quando a prop `topbar` é pass
   <div class="sinc-topbar"><!-- Conteúdo da Topbar --></div>
   <div class="sinc-main"><!-- Conteúdo Principal --></div>
 </div>
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### 9. Botão de alternância de navegação (`data-nav-toggle` e `data-target`)
+
+Utilizado no `NavToggle` para sinalizar o botão de acionamento do menu e vinculá-lo via seletor CSS ao elemento alvo (como a barra lateral ou gaveta móvel) que sofrerá a alteração de estado (`data-state`):
+
+```html
+<button
+  data-nav-toggle
+  data-target=".sinc-sidebar"
+  aria-label="Abrir/fechar menu de navegação"
+  aria-expanded="false"
+>
+  <!-- Ícones de abertura/fechamento -->
+</button>
 ```

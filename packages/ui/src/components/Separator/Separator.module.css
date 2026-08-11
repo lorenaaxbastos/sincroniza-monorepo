@@ -1,0 +1,120 @@
+.separator {
+  --_color: var(--sinc-separator-color, var(--color-gray-300));
+  --_thickness: var(--sinc-separator-thickness, var(--spacing-px));
+  --_label-size: var(--sinc-separator-label-size, var(--font-size-xs));
+  --_label-color: var(--sinc-separator-label-color, var(--color-gray-600));
+  --_label-weight: var(
+    --sinc-separator-label-weight,
+    var(--font-weight-medium)
+  );
+  --_label-padding: var(--sinc-separator-label-padding, var(--spacing-3));
+
+  flex-shrink: 0;
+  background-color: var(--_color);
+
+  &.primary {
+    --_color: var(--color-primary);
+  }
+
+  &.secondary {
+    --_color: var(--color-secondary);
+  }
+
+  &.tertiary {
+    --_color: var(--color-tertiary);
+  }
+
+  &.quaternary {
+    --_color: var(--color-quaternary);
+  }
+
+  &.light {
+    --_color: var(--color-gray-100);
+  }
+
+  &.dark {
+    --_color: var(--color-gray-600);
+  }
+
+  &.white {
+    --_color: var(--color-white);
+  }
+
+  &.black {
+    --_color: var(--color-black);
+  }
+
+  &.surface {
+    --_color: var(--color-gray-300);
+  }
+
+  &.horizontal {
+    width: 100%;
+    height: var(--_thickness);
+
+    &.spacing-none {
+      margin-block: var(--sinc-separator-spacing, 0);
+    }
+
+    &.spacing-sm {
+      margin-block: var(--sinc-separator-spacing, var(--spacing-2));
+    }
+
+    &.spacing-md {
+      margin-block: var(--sinc-separator-spacing, var(--spacing-4));
+    }
+
+    &.spacing-lg {
+      margin-block: var(--sinc-separator-spacing, var(--spacing-6));
+    }
+  }
+
+  &.vertical {
+    width: var(--_thickness);
+    height: auto;
+    min-height: 1rem;
+    align-self: stretch;
+
+    &.spacing-none {
+      margin-inline: var(--sinc-separator-spacing, 0);
+    }
+
+    &.spacing-sm {
+      margin-inline: var(--sinc-separator-spacing, var(--spacing-2));
+    }
+
+    &.spacing-md {
+      margin-inline: var(--sinc-separator-spacing, var(--spacing-4));
+    }
+
+    &.spacing-lg {
+      margin-inline: var(--sinc-separator-spacing, var(--spacing-6));
+    }
+  }
+
+  &.withContent {
+    height: auto;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: var(--_thickness);
+      background-color: var(--_color);
+    }
+
+    .label {
+      padding-inline: var(--_label-padding);
+      font-size: var(--_label-size);
+      font-weight: var(--_label-weight);
+      color: var(--_label-color);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+  }
+}

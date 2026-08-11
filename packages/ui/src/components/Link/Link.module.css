@@ -1,0 +1,200 @@
+.link {
+  --_color: var(--sinc-link-color, var(--color-primary));
+  --_color-hover: var(
+    --sinc-link-color-hover,
+    color-mix(in srgb, var(--_color), var(--color-gray-900) 20%)
+  );
+  --_font-size: var(--sinc-link-font-size, inherit);
+  --_font-weight: var(--sinc-link-font-weight, var(--font-weight-medium));
+  --_gap: var(--sinc-link-gap, 0.25em);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--_gap);
+  color: var(--_color);
+  font-size: var(--_font-size);
+  font-weight: var(--_font-weight);
+  text-decoration-line: none;
+  outline-offset: 2px;
+  border-radius: var(--radii-xs);
+  transition:
+    color var(--transition-base),
+    text-decoration-color var(--transition-base);
+
+  &:hover {
+    color: var(--_color-hover);
+  }
+
+  &.primary {
+    --_color: var(--color-primary);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-primary),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.secondary {
+    --_color: var(--color-secondary);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-secondary),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.tertiary {
+    --_color: var(--color-tertiary);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-tertiary),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.quaternary {
+    --_color: var(--color-quaternary);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-quaternary),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.success {
+    --_color: var(--color-feedback-success);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-feedback-success),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.warning {
+    --_color: var(--color-feedback-warning);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-feedback-warning),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.error {
+    --_color: var(--color-feedback-error);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-feedback-error),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.info {
+    --_color: var(--color-feedback-info);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-feedback-info),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.light {
+    --_color: var(--color-gray-100);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-gray-100),
+      var(--color-gray-900) 20%
+    );
+  }
+
+  &.dark {
+    --_color: var(--color-gray-900);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-gray-900),
+      var(--color-gray-100) 20%
+    );
+  }
+
+  &.white {
+    --_color: var(--color-white);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-white),
+      var(--color-black) 20%
+    );
+  }
+
+  &.black {
+    --_color: var(--color-black);
+    --_color-hover: color-mix(
+      in srgb,
+      var(--color-black),
+      var(--color-white) 20%
+    );
+  }
+
+  &.surface {
+    --_color: var(--color-gray-500);
+    --_color-hover: var(--color-gray-900);
+  }
+
+  &.inherit {
+    --_color: inherit;
+    --_color-hover: color-mix(in srgb, currentColor, var(--color-black) 20%);
+  }
+
+  /* Sublinhado */
+  &.underline-always {
+    text-decoration-line: underline;
+    text-underline-offset: 3px;
+  }
+
+  &.underline-hover {
+    text-decoration-line: none;
+    text-underline-offset: 3px;
+
+    &:hover {
+      text-decoration-line: underline;
+    }
+  }
+
+  &.underline-none {
+    text-decoration-line: none !important;
+  }
+
+  &.size-sm {
+    --_font-size: var(--sinc-link-font-size, var(--font-size-xs));
+  }
+
+  &.size-md {
+    --_font-size: var(--sinc-link-font-size, var(--font-size-sm));
+  }
+
+  &.size-lg {
+    --_font-size: var(--sinc-link-font-size, var(--font-size-md));
+  }
+
+  &.size-inherit {
+    --_font-size: inherit;
+  }
+
+  .externalIcon {
+    width: 0.85em;
+    height: 0.85em;
+    display: inline-block;
+    vertical-align: middle;
+    opacity: 0.6;
+    transition:
+      transform var(--transition-base, 0.2s ease),
+      opacity var(--transition-base, 0.2s ease);
+  }
+
+  &:hover .externalIcon {
+    transform: translate(2px, -2px);
+    opacity: 1;
+  }
+
+  & :global(svg) {
+    flex-shrink: 0;
+  }
+}

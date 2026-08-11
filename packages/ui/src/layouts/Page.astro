@@ -13,6 +13,7 @@ interface Props extends HTMLAttributes<'html'> {
   theme?: 'light' | 'dark' | 'system';
   googleAnalyticsId?: string;
   handTalkToken?: string;
+  hasScrollToTop?: boolean;
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   lang = 'pt-BR',
   theme = 'light',
   handTalkToken,
+  hasScrollToTop = true,
   ...rest
 } = Astro.props;
 ---
@@ -103,7 +105,7 @@ const {
       <slot />
     </div>
 
-    <ScrollToTop />
+    {hasScrollToTop && <ScrollToTop />}
 
     <div class="sinc-global-overlay" data-global-overlay aria-hidden="true">
     </div>

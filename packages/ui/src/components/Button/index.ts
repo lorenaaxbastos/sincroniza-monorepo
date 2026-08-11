@@ -5,6 +5,4 @@ export type {
   ButtonColor,
   ButtonSize,
   ButtonWidth,
-  ButtonAsButton,
-  ButtonAsAnchor,
 } from './Button';

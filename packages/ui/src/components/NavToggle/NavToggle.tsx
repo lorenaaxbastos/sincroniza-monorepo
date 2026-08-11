@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/Button';
-import type { ButtonAsButton } from '@/components/Button';
+import type { ButtonProps } from '@/components/Button';
 import { setAriaState, toggleDataState } from '@/utils/dom';
 import styles from './NavToggle.module.css';
 
@@ -14,7 +14,7 @@ export interface NavToggleProps extends Omit<
   /** Texto acessível para leitores de tela */
   ariaLabel?: string;
   /** Permite customizar qualquer propriedade do botão base */
-  buttonProps?: Partial<ButtonAsButton>;
+  buttonProps?: Partial<ButtonProps>;
   /** Classes CSS adicionais aplicadas ao componente */
   className?: string;
 }

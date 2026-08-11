@@ -21,34 +21,47 @@ export type ButtonColor =
 export type ButtonSize = 'sm' | 'md' | 'lg';
 export type ButtonWidth = 'fit' | 'full';
 
-interface CommonProps {
+export interface ButtonProps extends Omit<
+  React.ComponentPropsWithoutRef<'button'>,
+  'color'
+> {
+  /** Estilo visual e variante de preenchimento do botão */
   variant?: ButtonVariant;
+  /** Esquema de cor temática do botão */
   color?: ButtonColor;
+  /** Tamanho proporcional do botão (padding e tamanho da fonte) */
   size?: ButtonSize;
+  /** Comportamento de largura do botão ('fit' para ajustar ao conteúdo ou 'full' para ocupar 100%) */
   width?: ButtonWidth;
+  /** Aplica bordas totalmente arredondadas em formato de pílula */
   isPill?: boolean;
+  /** Transforma todo o texto do botão para caixa alta (uppercase) */
   isUppercase?: boolean;
+  /** Ajusta o botão para proporção quadrada/circular ideal quando contiver apenas um ícone */
   isIconOnly?: boolean;
+  /** Adiciona sombra de elevação visual ao botão */
   hasShadow?: boolean;
+  /** Exibe estado de carregamento, desabilita interações e substitui o conteúdo por um Spinner */
   isLoading?: boolean;
+  /** Desabilita o botão e impede interações do usuário */
   disabled?: boolean;
+  /** Elemento ou tag HTML base a ser renderizada ('button' ou 'a') */
   as?: 'button' | 'a';
-  children?: React.ReactNode;
+  /** Tipo de comportamento nativo do botão HTML ('button', 'submit' ou 'reset') */
+  type?: 'button' | 'submit' | 'reset';
+  /** URL de destino quando o botão é renderizado como link (`<a>`) */
+  href?: string;
+  /** Indica se o link é externo (adiciona target="_blank" e rel="noopener noreferrer") */
+  isExternal?: boolean;
+  /** Destino da navegação para links */
+  target?: string;
+  /** Relação do link para segurança/SEO */
+  rel?: string;
+  /** Classes CSS adicionais aplicadas ao elemento raiz do botão */
   className?: string;
+  /** Conteúdo interno renderizado dentro do botão */
+  children?: React.ReactNode;
 }
-
-export type ButtonAsButton = CommonProps &
-  Omit<React.ComponentPropsWithoutRef<'button'>, keyof CommonProps> & {
-    href?: undefined;
-  };
-
-export type ButtonAsAnchor = CommonProps &
-  Omit<React.ComponentPropsWithoutRef<'a'>, keyof CommonProps> & {
-    href: string;
-    isExternal?: boolean;
-  };
-
-export type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 
 const SPINNER_SIZES: Record<ButtonSize, number | 'xs' | 'sm'> = {
   sm: 'xs',
@@ -78,34 +91,37 @@ export const Button = React.forwardRef<
     disabled = false,
     className = '',
     children,
-    as: _as,
+    as,
+    href,
+    isExternal,
+    target,
+    rel,
+    type = 'button',
     ...restProps
   } = props;
 
   const isDisabled = disabled || isLoading;
+  const isLink = Boolean(href ?? as === 'a');
 
-  if ('href' in restProps && restProps.href) {
-    const { href, isExternal, target, rel, ...anchorProps } =
-      restProps as ButtonAsAnchor;
+  const classes = [
+    styles.button,
+    styles[variant],
+    styles[color],
+    styles[size],
+    width === 'full' ? styles.wFull : styles.wFit,
+    isPill && styles.pill,
+    isUppercase && styles.uppercase,
+    isIconOnly && styles.iconOnly,
+    hasShadow && styles.hasShadow,
+    isDisabled && styles.isDisabled,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
+  if (isLink && href) {
     const isAutoExternal = isExternal ?? isExternalUrl(href);
     const linkAttrs = getLinkAttributes(href, isExternal, target, rel);
-
-    const classes = [
-      styles.button,
-      styles[variant],
-      styles[color],
-      styles[size],
-      width === 'full' ? styles.wFull : styles.wFit,
-      isPill && styles.pill,
-      isUppercase && styles.uppercase,
-      isIconOnly && styles.iconOnly,
-      hasShadow && styles.hasShadow,
-      isDisabled && styles.isDisabled,
-      className,
-    ]
-      .filter(Boolean)
-      .join(' ');
 
     return (
       <a
@@ -116,7 +132,7 @@ export const Button = React.forwardRef<
         aria-disabled={isDisabled ? 'true' : undefined}
         tabIndex={isDisabled ? -1 : undefined}
         className={classes}
-        {...anchorProps}
+        {...(restProps as React.ComponentPropsWithoutRef<'a'>)}
       >
         {isLoading ? (
           <>
@@ -137,24 +153,6 @@ export const Button = React.forwardRef<
     );
   }
 
-  const { type = 'button', ...buttonProps } = restProps as ButtonAsButton;
-
-  const classes = [
-    styles.button,
-    styles[variant],
-    styles[color],
-    styles[size],
-    width === 'full' ? styles.wFull : styles.wFit,
-    isPill && styles.pill,
-    isUppercase && styles.uppercase,
-    isIconOnly && styles.iconOnly,
-    hasShadow && styles.hasShadow,
-    isDisabled && styles.isDisabled,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
   return (
     <button
       ref={ref as React.Ref<HTMLButtonElement>}
@@ -162,7 +160,7 @@ export const Button = React.forwardRef<
       disabled={isDisabled}
       aria-busy={isLoading ? 'true' : undefined}
       className={classes}
-      {...buttonProps}
+      {...restProps}
     >
       {isLoading ? (
         <>

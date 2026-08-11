@@ -10,6 +10,7 @@ export interface SincronizaHtmlOptions {
   theme?: 'light' | 'dark' | 'system';
   googleAnalyticsId?: string;
   handTalkToken?: string;
+  hasScrollToTop?: boolean;
 }
 
 const themeScript = (theme: string): string => `
@@ -77,6 +78,41 @@ const globalListenersScript = `
   })();
 `;
 
+const scrollToTopScript = `
+  (function() {
+    if (typeof window === 'undefined') return;
+
+    function initScrollToTop() {
+      var btn = document.querySelector('[data-sinc-scroll-to-top]');
+      if (!btn) return;
+
+      var threshold = 300;
+      var handleScroll = function() {
+        var scrollY = window.scrollY || document.documentElement.scrollTop;
+        if (scrollY > threshold) {
+          btn.setAttribute('data-visible', 'true');
+        } else {
+          btn.setAttribute('data-visible', 'false');
+        }
+      };
+
+      btn.addEventListener('click', function() {
+        var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      });
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollToTop);
+    } else {
+      initScrollToTop();
+    }
+  })();
+`;
+
 export function sincronizaHtmlPlugin(
   options: SincronizaHtmlOptions = {},
 ): Plugin {
@@ -90,6 +126,7 @@ export function sincronizaHtmlPlugin(
     theme = 'light',
     googleAnalyticsId,
     handTalkToken,
+    hasScrollToTop = true,
   } = options;
 
   return {
@@ -214,6 +251,30 @@ export function sincronizaHtmlPlugin(
         tag: 'script',
         children: globalListenersScript,
       });
+
+      if (hasScrollToTop) {
+        tags.push(
+          {
+            injectTo: 'body',
+            tag: 'button',
+            attrs: {
+              type: 'button',
+              class:
+                'sinc-button solid primary md iconOnly pill sinc-scroll-to-top-btn',
+              'data-sinc-scroll-to-top': 'true',
+              'aria-label': 'Voltar ao topo da página',
+              style:
+                'position: fixed; bottom: 2.4rem; right: 2.4rem; z-index: 200; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;',
+            },
+            children: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>`,
+          },
+          {
+            injectTo: 'body',
+            tag: 'script',
+            children: scrollToTopScript,
+          },
+        );
+      }
 
       if (handTalkToken) {
         tags.push(
