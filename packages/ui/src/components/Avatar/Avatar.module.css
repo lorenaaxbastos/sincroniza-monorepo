@@ -43,6 +43,37 @@
 .size-xl {
   --_size: var(--sinc-avatar-size, 6.4rem);
   font-size: var(--font-size-xl);
+  transition:
+    width var(--transition-fast),
+    height var(--transition-fast),
+    font-size var(--transition-fast);
+}
+
+.size-xxl {
+  --_size: var(--sinc-avatar-size, 8.2rem);
+  font-size: var(--font-size-xxl);
+  transition:
+    width var(--transition-fast),
+    height var(--transition-fast),
+    font-size var(--transition-fast);
+}
+
+.size-xxxl {
+  --_size: var(--sinc-avatar-size, 10rem);
+  font-size: var(--font-size-xxxl);
+  transition:
+    width var(--transition-fast),
+    height var(--transition-fast),
+    font-size var(--transition-fast);
+}
+
+@container (max-width: 8rem) {
+  .size-xl,
+  .size-xxl,
+  .size-xxxl {
+    --_size: var(--sinc-avatar-size, 4.8rem);
+    font-size: var(--font-size-lg);
+  }
 }
 
 .variant-circle {

@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { ArgTypes, Description, Title } from '@storybook/blocks';
 import type { Meta, StoryObj } from '@storybook/react';
+import {
+  BarChart3,
+  BookOpen,
+  FolderKanban,
+  Library,
+  Moon,
+  Sun,
+} from 'lucide-react';
+import { Avatar } from '@/components/Avatar';
+import { Badge } from '@/components/Badge';
+import { Box } from '@/components/Box';
 import { Button } from '@/components/Button';
+import { NavGroup } from '@/components/NavGroup';
+import { NavLink } from '@/components/NavLink';
 import { NavToggle } from '@/components/NavToggle';
+import { ScrollToTop } from '@/components/ScrollToTop';
 import { Container } from '@/layouts/Container';
 import { Grid } from '@/layouts/Grid';
 import { Header } from '@/layouts/Header';
 import { Sidebar } from '@/layouts/Sidebar';
 import { Stack } from '@/layouts/Stack';
+import { toggleTheme } from '@/utils/dom';
 import { AppLayout } from './AppLayout';
 
 type AppLayoutStoryProps = React.ComponentProps<typeof AppLayout> &
@@ -35,14 +50,6 @@ const meta: Meta<AppLayoutStoryProps> = {
     footer: { table: { category: 'Propriedades (Props)' } },
     children: { table: { category: 'Propriedades (Props)' } },
     className: { table: { category: 'Propriedades (Props)' } },
-    '--sinc-app-layout-bg': {
-      control: 'text',
-      description: 'Cor de fundo da casca da aplicação',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--color-bg-canvas)' },
-      },
-    },
     '--sinc-app-main-margin': {
       control: 'text',
       description: 'Margem externa do container principal',
@@ -145,59 +152,34 @@ const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
   );
 };
 
-const BrandMock = () => (
-  <strong style={{ color: 'var(--color-primary)', fontSize: '1.6rem' }}>
-    Sincroniza UI
-  </strong>
-);
+const ThemeToggleMock = () => {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const currentDomTheme = document.documentElement.getAttribute('data-theme');
+    return currentDomTheme === 'dark' ? 'dark' : 'light';
+  });
 
-const SearchMock = () => (
-  <input
-    type="text"
-    placeholder="Buscar dados..."
-    style={{
-      width: '100%',
-      maxWidth: '32rem',
-      padding: '0.8rem 1.6rem',
-      borderRadius: 'var(--radii-pill)',
-      border: '1px solid var(--color-gray-300)',
-      outline: 'none',
-      backgroundColor: 'var(--color-gray-100)',
-    }}
-  />
-);
+  const handleToggle = () => {
+    // Apenas UMA execução limpa por clique
+    const newTheme = toggleTheme();
+    setTheme(newTheme === 'dark' ? 'dark' : 'light');
+  };
 
-const SidebarNavMock = () => (
-  <Stack direction="column" gap="xl" style={{ height: '100%' }}>
-    <strong style={{ color: 'var(--color-white)', fontSize: '1.8rem' }}>
-      Dashboard
-    </strong>
-    <Stack as="nav" direction="column" gap="xs">
-      {['Visão Geral', 'Alunos', 'Turmas', 'Desempenho', 'Configurações'].map(
-        (item) => (
-          <button
-            key={item}
-            type="button"
-            style={{
-              background:
-                'color-mix(in srgb, var(--color-white), transparent 90%)',
-              border: 'none',
-              color: 'var(--color-white)',
-              textAlign: 'left',
-              padding: 'var(--spacing-2) var(--spacing-3)',
-              borderRadius: 'var(--radii-sm)',
-              cursor: 'pointer',
-              fontSize: 'var(--font-size-sm)',
-              fontWeight: 'var(--font-weight-medium)',
-            }}
-          >
-            {item}
-          </button>
-        ),
-      )}
-    </Stack>
-  </Stack>
-);
+  const isDark = theme === 'dark';
+
+  return (
+    <Button
+      variant="ghost"
+      color={isDark ? 'primary' : 'quaternary'}
+      isIconOnly
+      isPill
+      aria-label="Alternar Tema"
+      onClick={handleToggle}
+    >
+      {isDark ? <Moon size={20} /> : <Sun size={20} />}
+    </Button>
+  );
+};
 
 const DashboardApp = (args: AppLayoutStoryProps) => {
   const [isSyncing, setIsSyncing] = useState(false);
@@ -216,7 +198,54 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
         {...args}
         sidebar={
           <Sidebar id="app-sidebar">
-            <SidebarNavMock />
+            <Stack direction="column" gap="lg" align="center">
+              <style>{`
+                @container (max-width: 8rem) { .username { display: none; } }
+              `}</style>
+              <strong style={{ color: 'var(--color-white)', fontSize: '2rem' }}>
+                Logo
+              </strong>
+
+              <Stack direction="column" align="center" gap="xs">
+                <Avatar size="xxxl" name="Lorena Bastos" />
+                <span
+                  className="username"
+                  style={{
+                    color: 'var(--color-white)',
+                    fontSize: 'var(--font-size-xl)',
+                    fontWeight: 'var(--font-weight-semibold)',
+                  }}
+                >
+                  Olá, Lorena!
+                </span>
+              </Stack>
+
+              <NavGroup style={{ width: '100%' }}>
+                <NavLink
+                  color="white"
+                  href="#"
+                  isActive
+                  style={
+                    {
+                      '--sinc-nav-link-bg-active': 'var(--color-primary)',
+                      '--sinc-nav-link-color-active': 'var(--color-white)',
+                    } as React.CSSProperties
+                  }
+                  icon={<FolderKanban size={18} />}
+                >
+                  Projetos
+                </NavLink>
+                <NavLink color="white" href="#" icon={<BarChart3 size={18} />}>
+                  Resultados
+                </NavLink>
+                <NavLink color="white" href="#" icon={<BookOpen size={18} />}>
+                  Aprendizados
+                </NavLink>
+                <NavLink color="white" href="#" icon={<Library size={18} />}>
+                  Recursos
+                </NavLink>
+              </NavGroup>
+            </Stack>
           </Sidebar>
         }
         header={
@@ -224,131 +253,121 @@ const DashboardApp = (args: AppLayoutStoryProps) => {
             start={
               <Stack align="center" gap="xs">
                 <style>{`
-                  .app-mobile-nav { display: none; }
-                  @media(max-width: 48em) { .app-mobile-nav { display: block; } }
-                `}</style>
+          .app-mobile-nav { display: none; }
+          .app-badge-desktop { display: none; }
+          .app-header-title {
+            font-size: 1.6rem;
+            margin: 0;
+            white-space: nowrap;
+          }
+          @media(max-width: 48em) { 
+            .app-mobile-nav { display: flex; flex-shrink: 0; } 
+          }
+          @media(min-width: 48em) { 
+            .app-badge-desktop { display: inline-flex; }
+            .app-header-title { font-size: 2.2rem; }
+          }
+        `}</style>
                 <div className="app-mobile-nav">
-                  <NavToggle targetSelector="#app-sidebar" />
+                  <NavToggle
+                    buttonProps={{ color: 'primary', variant: 'solid' }}
+                    targetSelector="#app-sidebar"
+                  />
                 </div>
-                <BrandMock />
+                <h1 className="app-header-title">Gestão à Vista</h1>
+                <span className="app-badge-desktop">
+                  <Badge color="info" variant="subtle">
+                    v1.0
+                  </Badge>
+                </span>
               </Stack>
             }
-            center={
-              <div
-                style={{
-                  display: 'none',
-                  width: '100%',
-                  justifyContent: 'center',
-                }}
-                className="desktop-only"
-              >
-                <style>{`@media(min-width: 48em) { .desktop-only { display: flex !important; } }`}</style>
-                <SearchMock />
-              </div>
-            }
             end={
-              <div
-                style={{
-                  width: '3.6rem',
-                  height: '3.6rem',
-                  background: 'var(--color-primary)',
-                  borderRadius: '50%',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                }}
-              >
-                MS
-              </div>
+              <Stack direction="row" align="center" gap="xs">
+                <ThemeToggleMock />
+              </Stack>
             }
           />
         }
+        footer={
+          <Box
+            as="div"
+            padding="sm"
+            style={{
+              textAlign: 'center',
+              fontSize: '1.2rem',
+              opacity: 0.8,
+              borderTop: 'var(--spacing-px) solid var(--color-gray-300)',
+            }}
+          >
+            Painel de Gestão à Vista v1.0 © Sincroniza Educação. 2026.
+          </Box>
+        }
       >
-        <Container size="xl" padding="md">
-          <Stack direction="column" gap="xl" style={{ padding: '3.2rem 0' }}>
+        <Container size="xl" padding="lg">
+          <Stack direction="column" gap="xl" style={{ padding: '2.4rem 0' }}>
             <Stack
               direction="row"
               justify="space-between"
-              align="flex-start"
+              align="center"
               wrap
               gap="md"
             >
               <div>
-                <h1 style={{ margin: '0 0 0.8rem 0', fontSize: '2.4rem' }}>
-                  Visão Geral
-                </h1>
-                <p style={{ margin: 0, color: 'var(--color-gray-600)' }}>
-                  Acompanhe os indicadores das escolas sincronizadas.
+                <h2 style={{ margin: '0 0 0.4rem 0', fontSize: '2rem' }}>
+                  Acompanhamento geral
+                </h2>
+                <p style={{ margin: 0 }}>
+                  Indicadores de desempenho das unidades em tempo real.
                 </p>
               </div>
               <Button
-                color="primary"
+                color="tertiary"
                 onClick={handleSync}
                 isLoading={isSyncing}
               >
-                Sincronizar Dados
+                Sincronizar dados
               </Button>
             </Stack>
 
-            <Grid minItemWidth="28rem" gap="md">
+            <Grid minItemWidth="24rem" gap="md">
               {[
                 { title: 'Total de Alunos', value: '14.230' },
                 { title: 'Média de Notas', value: '8.4' },
                 { title: 'Frequência', value: '94%' },
               ].map((stat, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: '2.4rem',
-                    background: 'var(--color-white)',
-                    borderRadius: 'var(--radii-md)',
-                    border: '1px solid var(--color-gray-300)',
-                    boxShadow: 'var(--shadow-sm)',
-                  }}
-                >
-                  <span
-                    style={{
-                      color: 'var(--color-gray-600)',
-                      fontSize: '1.4rem',
-                    }}
-                  >
-                    {stat.title}
-                  </span>
+                <Box key={i} color="light" variant="solid" shadow="sm">
+                  <span style={{ fontSize: '1.4rem' }}>{stat.title}</span>
                   <strong
                     style={{
                       display: 'block',
-                      fontSize: '3.2rem',
+                      fontSize: '3rem',
                       marginTop: '0.8rem',
-                      color: 'var(--color-text-title)',
                     }}
                   >
                     {stat.value}
                   </strong>
-                </div>
+                </Box>
               ))}
             </Grid>
 
-            <div
+            <Box
+              color="transparent"
               style={{
-                marginTop: '2.4rem',
-                padding: '3.2rem',
-                background: 'var(--color-white)',
-                borderRadius: 'var(--radii-md)',
-                border: '1px dashed var(--color-gray-300)',
+                border: '2px dashed var(--color-gray-400)',
                 minHeight: '60rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <p style={{ color: 'var(--color-gray-500)' }}>
-                Área de gráficos longo (role para testar o scroll do AppLayout)
+              <p style={{ fontSize: '1.8rem', textAlign: 'center' }}>
+                Conteúdo das páginas
               </p>
-            </div>
+            </Box>
           </Stack>
         </Container>
+        <ScrollToTop />
       </AppLayout>
     </>
   );

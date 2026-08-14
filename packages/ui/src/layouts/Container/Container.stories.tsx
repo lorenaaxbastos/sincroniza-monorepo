@@ -29,7 +29,7 @@ const meta: Meta<ContainerStoryProps> = {
   argTypes: {
     as: {
       control: 'select',
-      options: ['div', 'section', 'article', 'nav'],
+      options: ['div', 'nav'],
       table: { category: 'Propriedades (Props)' },
     },
     size: {
@@ -57,7 +57,8 @@ const meta: Meta<ContainerStoryProps> = {
     },
     '--sinc-container-padding-inline': {
       control: 'text',
-      description: 'Espaçamento interno horizontal',
+      description:
+        'Espaçamento interno horizontal reativo (ajusta para var(--spacing-4) em breakpoint mobile)',
       table: {
         category: 'Variáveis CSS',
         defaultValue: { summary: 'padding-md (var(--spacing-4))' },

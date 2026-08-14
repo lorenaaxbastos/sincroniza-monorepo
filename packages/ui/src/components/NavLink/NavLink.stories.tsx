@@ -180,13 +180,13 @@ export const EstadoAtivo: Story = {
         width: '24rem',
       }}
     >
-      <NavLink href="#" isActive icon={<Home size={18} />}>
+      <NavLink href="#" color="primary" isActive icon={<Home size={18} />}>
         Página Inicial (ativa)
       </NavLink>
-      <NavLink href="#" icon={<User size={18} />}>
+      <NavLink href="#" color="primary" icon={<User size={18} />}>
         Meu Perfil
       </NavLink>
-      <NavLink href="#" icon={<Settings size={18} />}>
+      <NavLink href="#" color="primary" icon={<Settings size={18} />}>
         Configurações
       </NavLink>
     </ul>

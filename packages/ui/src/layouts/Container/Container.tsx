@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Container.module.css';
 
-export type ContainerTag = 'div' | 'section' | 'article' | 'nav';
+export type ContainerTag = 'div' | 'nav';
 
 export type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full';
 

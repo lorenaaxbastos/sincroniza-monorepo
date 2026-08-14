@@ -1,8 +1,20 @@
 import React, { useEffect } from 'react';
 import { ArgTypes, Description, Title } from '@storybook/blocks';
 import type { Meta, StoryObj } from '@storybook/react';
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  Sparkles,
+  Users,
+} from 'lucide-react';
+import { Badge } from '@/components/Badge';
+import { Box } from '@/components/Box';
 import { Button } from '@/components/Button';
+import { NavGroup } from '@/components/NavGroup';
+import { NavLink } from '@/components/NavLink';
 import { NavToggle } from '@/components/NavToggle';
+import { ScrollToTop } from '@/components/ScrollToTop';
 import { Container } from '@/layouts/Container';
 import { Grid } from '@/layouts/Grid';
 import { Header } from '@/layouts/Header';
@@ -33,58 +45,55 @@ const meta: Meta<WebLayoutStoryProps> = {
     footer: { table: { category: 'Propriedades (Props)' } },
     children: { table: { category: 'Propriedades (Props)' } },
     className: { table: { category: 'Propriedades (Props)' } },
-    '--sinc-web-layout-bg': {
-      control: 'text',
-      description: 'Cor de fundo da casca da página',
-      table: {
-        category: 'Variáveis CSS',
-        defaultValue: { summary: 'var(--color-bg-canvas)' },
-      },
-    },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
+/* Mock do Drawer Mobile Fullscreen sincronizado via MutationObserver */
+const MobileMenuMock = ({ targetId }: { targetId: string }) => {
   useEffect(() => {
     const targetEl = document.getElementById(targetId);
     if (!targetEl) return;
 
     const overlay = document.querySelector('[data-global-overlay]');
-    const toggleBtn = document.querySelector(`[data-target="#${targetId}"]`);
 
     const closeMenu = () => {
       targetEl.setAttribute('data-state', 'closed');
-      overlay?.setAttribute('data-state', 'closed');
-
-      if (toggleBtn) {
-        toggleBtn.setAttribute('aria-expanded', 'false');
-        toggleBtn.removeAttribute('data-active');
-      }
     };
 
     const handleDocClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.matches('[data-global-overlay]') ||
-        (targetEl.getAttribute('data-state') === 'open' &&
-          !targetEl.contains(target) &&
-          !toggleBtn?.contains(target))
-      ) {
+      if ((e.target as HTMLElement).matches('[data-global-overlay]')) {
         closeMenu();
       }
     };
+
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeMenu();
     };
 
+    // Observa o data-state alterado nativamente pelo NavToggle
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((m) => {
         if (m.attributeName === 'data-state') {
           const isOpen = targetEl.getAttribute('data-state') === 'open';
+
           overlay?.setAttribute('data-state', isOpen ? 'open' : 'closed');
+          document.body.style.overflow = isOpen ? 'hidden' : '';
+
+          const toggleBtns = document.querySelectorAll(
+            `[data-target="#${targetId}"], [data-target="${targetId}"]`,
+          );
+          toggleBtns.forEach((btn) => {
+            if (isOpen) {
+              btn.setAttribute('aria-expanded', 'true');
+              btn.setAttribute('data-active', 'true');
+            } else {
+              btn.setAttribute('aria-expanded', 'false');
+              btn.removeAttribute('data-active');
+            }
+          });
         }
       });
     });
@@ -97,18 +106,20 @@ const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
       document.removeEventListener('click', handleDocClick);
       document.removeEventListener('keydown', handleEsc);
       observer.disconnect();
+      document.body.style.overflow = '';
     };
   }, [targetId]);
 
   return (
     <>
       <style>{`
+        /* Overlay Global */
         .sinc-global-overlay {
           position: fixed;
           inset: 0;
-          background-color: rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(4px);
-          z-index: calc(var(--z-index-fixed, 100) - 1);
+          background-color: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(2px);
+          z-index: calc(var(--z-index-fixed, 100) + 5);
           opacity: 0;
           visibility: hidden;
           transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -117,226 +128,418 @@ const GlobalOverlayMock = ({ targetId }: { targetId: string }) => {
           opacity: 1;
           visibility: visible;
         }
+
+        /* Drawer Mobile Fullscreen */
+        .sinc-web-mobile-menu {
+          position: fixed;
+          inset: 0;
+          z-index: calc(var(--z-index-fixed, 100) + 10);
+          background-color: var(--color-bg-canvas);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: var(--spacing-6);
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sinc-web-mobile-menu[data-state="open"] {
+          opacity: 1;
+          visibility: visible;
+        }
+        @media (min-width: 48.1em) {
+          .sinc-web-mobile-menu,
+          .sinc-global-overlay {
+            display: none !important;
+          }
+        }
+        .sinc-web-mobile-close {
+          position: absolute;
+          top: var(--spacing-4);
+          right: var(--spacing-4);
+        }
       `}</style>
+
+      {/* Máscara de sobreposição global */}
       <div
         className="sinc-global-overlay"
         data-global-overlay
+        data-state="closed"
         aria-hidden="true"
       />
+
+      {/* Drawer com atributos de estado completos */}
+      <div
+        id={targetId}
+        className="sinc-web-mobile-menu"
+        data-state="closed"
+        data-scroll-lock
+        data-overlay="front"
+      >
+        {/* Botão de Fechar no Canto Superior Direito */}
+        <div className="sinc-web-mobile-close">
+          <NavToggle targetSelector={`#${targetId}`} />
+        </div>
+
+        {/* Conteúdo Centralizado em Tela Cheia */}
+        <Stack
+          direction="column"
+          align="center"
+          gap="xl"
+          style={{ width: '100%', maxWidth: '32rem' }}
+        >
+          <strong
+            style={{
+              fontSize: '2.4rem',
+              fontWeight: 'var(--font-weight-bold)',
+              color: 'var(--color-secondary)',
+              textAlign: 'center',
+            }}
+          >
+            Sincroniza Educação
+          </strong>
+
+          <NavGroup
+            direction="column"
+            align="center"
+            gap="md"
+            style={{ width: '100%' }}
+          >
+            <NavLink
+              href="#"
+              variant="line"
+              color="primary"
+              isActive
+              style={{ fontSize: '1.8rem' }}
+            >
+              Início
+            </NavLink>
+            <NavLink
+              href="#"
+              variant="line"
+              color="primary"
+              style={{ fontSize: '1.8rem' }}
+            >
+              Soluções
+            </NavLink>
+            <NavLink
+              href="#"
+              variant="line"
+              color="primary"
+              style={{ fontSize: '1.8rem' }}
+            >
+              Sobre Nós
+            </NavLink>
+            <NavLink
+              href="#"
+              variant="line"
+              color="primary"
+              style={{ fontSize: '1.8rem' }}
+            >
+              Contato
+            </NavLink>
+          </NavGroup>
+
+          <Stack
+            direction="column"
+            gap="sm"
+            style={{ width: '100%', marginTop: 'var(--spacing-4)' }}
+          >
+            <Button
+              variant="ghost"
+              color="secondary"
+              size="lg"
+              style={{ width: '100%' }}
+            >
+              Entrar
+            </Button>
+            <Button
+              variant="solid"
+              color="secondary"
+              size="lg"
+              style={{ width: '100%' }}
+            >
+              Acessar plataforma
+            </Button>
+          </Stack>
+        </Stack>
+      </div>
     </>
   );
 };
 
-const WebNavLinks = () => (
-  <Stack
-    as="nav"
-    direction="row"
-    gap="lg"
-    align="center"
-    className="desktop-nav"
-    style={{ fontWeight: 500, fontSize: '1.4rem' }}
-  >
-    <style>{`
-      .desktop-nav {
-        display: none !important;
-      }
-      @media (min-width: 48em) {
-        .desktop-nav {
-          display: flex !important;
-        }
-      }
-    `}</style>
-    <a href="#solucoes" style={{ color: 'inherit', textDecoration: 'none' }}>
-      Soluções
-    </a>
-    <a href="#metodologia" style={{ color: 'inherit', textDecoration: 'none' }}>
-      Metodologia
-    </a>
-    <a href="#casos" style={{ color: 'inherit', textDecoration: 'none' }}>
-      Casos de Sucesso
-    </a>
-  </Stack>
-);
-
-const FooterMock = () => (
-  <footer
-    style={{
-      backgroundColor: 'var(--color-gray-900)',
-      color: 'var(--color-gray-300)',
-      padding: '4rem 0',
-      textAlign: 'center',
-      fontSize: '1.4rem',
-    }}
-  >
-    © 2026 Sincroniza Educação - Transformando a educação pública do Brasil.
-  </footer>
-);
-
-const LandingPageApp = (args: WebLayoutStoryProps) => {
+const LandingPage = (args: WebLayoutStoryProps) => {
   return (
     <>
-      <GlobalOverlayMock targetId="sinc-web-mobile-menu" />
+      <MobileMenuMock targetId="web-mobile-menu" />
+
       <WebLayout
         {...args}
         header={
           <Header
-            position="fixed"
             isTransparent
+            position="fixed"
             start={
-              <strong
-                style={{ fontSize: '2rem', color: 'var(--color-primary)' }}
-              >
-                Sincroniza
-              </strong>
+              <Stack align="center" gap="xs">
+                <style>{`
+                  /* Visibilidade responsiva dos elementos do Header */
+                  .web-desktop-nav,
+                  .web-desktop-actions {
+                    display: none;
+                  }
+                  .web-mobile-toggle {
+                    display: block;
+                  }
+
+                  @media (min-width: 48em) {
+                    .web-desktop-nav,
+                    .web-desktop-actions {
+                      display: flex;
+                    }
+                    .web-mobile-toggle {
+                      display: none;
+                    }
+                  }
+                `}</style>
+                <strong
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 'var(--font-weight-bold)',
+                    color: 'var(--color-secondary)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Sincroniza Educação
+                </strong>
+              </Stack>
             }
-            center={<WebNavLinks />}
+            center={
+              <div className="web-desktop-nav">
+                <NavGroup direction="row" gap="sm">
+                  <NavLink href="#" variant="line" color="primary" isActive>
+                    Início
+                  </NavLink>
+                  <NavLink href="#" variant="line" color="primary">
+                    Soluções
+                  </NavLink>
+                  <NavLink href="#" variant="line" color="primary">
+                    Sobre Nós
+                  </NavLink>
+                  <NavLink href="#" variant="line" color="primary">
+                    Contato
+                  </NavLink>
+                </NavGroup>
+              </div>
+            }
             end={
-              <Stack direction="row" align="center" gap="md">
-                <div className="desktop-actions">
-                  <style>{`
-                    .desktop-actions { display: none !important; }
-                    @media(min-width: 48em) { .desktop-actions { display: flex !important; gap: 1.2rem; } }
-                  `}</style>
-                  <Button variant="ghost" color="primary">
-                    Entrar
-                  </Button>
-                  <Button color="primary">Falar com consultor</Button>
+              <Stack direction="row" align="center" gap="xs">
+                {/* Botões visíveis no Desktop */}
+                <div className="web-desktop-actions">
+                  <Stack direction="row" align="center" gap="xs">
+                    <Button variant="ghost" color="secondary">
+                      Entrar
+                    </Button>
+                    <Button variant="solid" color="secondary">
+                      Acessar plataforma
+                    </Button>
+                  </Stack>
                 </div>
-                <div className="mobile-toggle">
-                  <style>{`
-                    .mobile-toggle { display: block; }
-                    @media(min-width: 48em) { .mobile-toggle { display: none; } }
-                  `}</style>
-                  <NavToggle
-                    targetSelector="#sinc-web-mobile-menu"
-                    buttonProps={{ color: 'primary', variant: 'solid' }}
-                  />
+
+                {/* NavToggle visível no Mobile */}
+                <div className="web-mobile-toggle">
+                  <NavToggle targetSelector="#web-mobile-menu" />
                 </div>
               </Stack>
             }
           />
         }
-        footer={<FooterMock />}
-      >
-        <style>{`
-          .mobile-drawer {
-            position: fixed; top: 0; left: 0; bottom: 0; width: 28rem;
-            background: var(--color-white); z-index: calc(var(--z-index-fixed) - 1);
-            transform: translateX(-100%); transition: transform 0.3s ease;
-            padding: 8rem 2.4rem; box-shadow: var(--shadow-lg);
-          }
-          .mobile-drawer[data-state="open"] { transform: translateX(0); }
-        `}</style>
-        <div
-          id="sinc-web-mobile-menu"
-          className="mobile-drawer"
-          data-state="closed"
-          data-scroll-lock
-        >
-          <Stack
-            direction="column"
-            gap="xl"
-            style={{ marginTop: 'var(--sinc-header-height)' }}
-          >
-            <WebNavLinks />
-            <hr
-              style={{ borderColor: 'var(--color-gray-200)', margin: '1rem 0' }}
-            />
-            <Button variant="outline" color="primary" width="full">
-              Entrar
-            </Button>
-            <Button color="primary" width="full">
-              Falar com consultor
-            </Button>
-          </Stack>
-        </div>
+        footer={
+          <Box color="dark" variant="solid" padding="xl">
+            <Container size="xl">
+              <Stack direction="column" gap="xl">
+                <Grid minItemWidth="18rem" gap="xl">
+                  <Stack direction="column" gap="xs">
+                    <strong
+                      style={{
+                        fontSize: '1.8rem',
+                        color: 'var(--color-white)',
+                      }}
+                    >
+                      Sincroniza Educação
+                    </strong>
+                    <p style={{ fontSize: '1.4rem', opacity: 0.8, margin: 0 }}>
+                      Transformando a educação pública através de soluções
+                      pedagógicas e tecnologia.
+                    </p>
+                  </Stack>
 
-        <section
-          style={{
-            backgroundColor: 'var(--color-primary-light)',
-            paddingTop: '16rem',
-            paddingBottom: '8rem',
-            textAlign: 'center',
-          }}
-        >
-          <Container size="md" padding="md">
-            <h1
-              style={{
-                fontSize: '4.8rem',
-                color: 'var(--color-primary)',
-                lineHeight: 1.1,
-                marginBottom: '2.4rem',
-              }}
-            >
-              Tecnologia para impulsionar a educação
-            </h1>
-            <p
-              style={{
-                fontSize: '2rem',
-                color: 'var(--color-gray-700)',
-                marginBottom: '4rem',
-              }}
-            >
-              Nossa plataforma conecta escolas, professores e alunos para
-              construir o futuro da aprendizagem.
-            </p>
-            <Stack direction="row" gap="md" justify="center" wrap>
-              <Button size="lg" color="primary" hasShadow>
-                Começar agora
-              </Button>
-              <Button size="lg" variant="outline" color="primary">
-                Conheça o sistema
-              </Button>
-            </Stack>
-          </Container>
-        </section>
+                  <Stack direction="column" gap="xs">
+                    <strong
+                      style={{
+                        fontSize: '1.4rem',
+                        color: 'var(--color-white)',
+                      }}
+                    >
+                      Navegação
+                    </strong>
+                    <NavLink href="#" color="white" variant="line">
+                      Início
+                    </NavLink>
+                    <NavLink href="#" color="white" variant="line">
+                      Soluções Pedagógicas
+                    </NavLink>
+                    <NavLink href="#" color="white" variant="line">
+                      Casos de Sucesso
+                    </NavLink>
+                  </Stack>
 
-        <section
-          style={{ padding: '8rem 0', backgroundColor: 'var(--color-white)' }}
-        >
-          <Container size="xl" padding="md">
-            <Grid minItemWidth="30rem" gap="xl">
-              {[1, 2, 3].map((i) => (
+                  <Stack direction="column" gap="xs">
+                    <strong
+                      style={{
+                        fontSize: '1.4rem',
+                        color: 'var(--color-white)',
+                      }}
+                    >
+                      Institucional
+                    </strong>
+                    <NavLink href="#" color="white" variant="line">
+                      Sobre Nós
+                    </NavLink>
+                    <NavLink href="#" color="white" variant="line">
+                      Trabalhe Conosco
+                    </NavLink>
+                    <NavLink href="#" color="white" variant="line">
+                      Políticas de Privacidade
+                    </NavLink>
+                  </Stack>
+                </Grid>
+
                 <div
-                  key={i}
                   style={{
-                    padding: '3.2rem',
-                    backgroundColor: 'var(--color-gray-50)',
-                    borderRadius: 'var(--radii-md)',
+                    borderTop: '1px solid var(--color-gray-800)',
+                    paddingTop: 'var(--spacing-4)',
+                    textAlign: 'center',
+                    fontSize: '1.2rem',
+                    opacity: 0.7,
                   }}
                 >
-                  <div
+                  © 2026 Sincroniza Educação. Todos os direitos reservados.
+                </div>
+              </Stack>
+            </Container>
+          </Box>
+        }
+      >
+        <Box style={{ paddingTop: 'var(--sinc-header-height)' }}>
+          <Box paddingBlock="xxl">
+            <Container size="xl" padding="md">
+              <Stack direction="column" gap="xxl" style={{ padding: '4rem 0' }}>
+                {/* Hero Section */}
+                <Stack
+                  direction="column"
+                  align="center"
+                  gap="lg"
+                  style={{
+                    textAlign: 'center',
+                    maxWidth: '80rem',
+                    margin: '0 auto',
+                  }}
+                >
+                  <Badge color="tertiary" variant="subtle">
+                    <Sparkles size={14} style={{ marginRight: '0.4rem' }} />{' '}
+                    Inovação educacional
+                  </Badge>
+
+                  <h1
                     style={{
-                      width: '4.8rem',
-                      height: '4.8rem',
-                      background: 'var(--color-primary)',
-                      borderRadius: 'var(--radii-sm)',
-                      marginBottom: '1.6rem',
-                    }}
-                  />
-                  <h3 style={{ fontSize: '2rem', marginBottom: '1.2rem' }}>
-                    Módulo de Gestão #{i}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: '1.6rem',
-                      color: 'var(--color-gray-600)',
-                      lineHeight: 1.5,
+                      fontSize: '3.6rem',
+                      lineHeight: 1.2,
+                      margin: 0,
                     }}
                   >
-                    Integração completa com as principais bases de dados
-                    educacionais, garantindo fluidez e velocidade.
+                    Impulsionando a educação pública com eficiência e dados
+                  </h1>
+
+                  <p style={{ fontSize: '1.8rem', opacity: 0.8, margin: 0 }}>
+                    Oferecemos apoio especializado para secretarias de educação,
+                    gestores e professores alcançarem resultados reais de
+                    aprendizagem.
                   </p>
-                </div>
-              ))}
-            </Grid>
-          </Container>
-        </section>
+
+                  <Stack direction="row" gap="md" justify="center" wrap>
+                    <Button
+                      color="primary"
+                      size="lg"
+                      rightIcon={<ArrowRight size={20} />}
+                    >
+                      Conhecer Projetos
+                    </Button>
+                    <Button color="surface" variant="outline" size="lg">
+                      Falar com Consultor
+                    </Button>
+                  </Stack>
+                </Stack>
+
+                {/* Cards / Destaques */}
+                <Grid minItemWidth="22rem" gap="lg">
+                  {[
+                    {
+                      icon: <GraduationCap size={28} />,
+                      title: 'Formação de Educadores',
+                      description:
+                        'Capacitações contínuas e práticas pedagógicas focadas no chão da escola.',
+                    },
+                    {
+                      icon: <BookOpen size={28} />,
+                      title: 'Gestão de Aprendizagem',
+                      description:
+                        'Acompanhamento detalhado de indicadores e diagnósticos educacionais.',
+                    },
+                    {
+                      icon: <Users size={28} />,
+                      title: 'Apoio às Secretarias',
+                      description:
+                        'Consultoria estratégica para implementação de políticas públicas.',
+                    },
+                  ].map((feature, i) => (
+                    <Box
+                      key={i}
+                      color="light"
+                      variant="solid"
+                      shadow="sm"
+                      padding="xl"
+                    >
+                      <Stack direction="column" gap="sm">
+                        <div style={{ color: 'var(--color-primary)' }}>
+                          {feature.icon}
+                        </div>
+                        <h3 style={{ fontSize: '1.8rem', margin: 0 }}>
+                          {feature.title}
+                        </h3>
+                        <p
+                          style={{
+                            fontSize: '1.4rem',
+                            margin: 0,
+                            opacity: 0.8,
+                          }}
+                        >
+                          {feature.description}
+                        </p>
+                      </Stack>
+                    </Box>
+                  ))}
+                </Grid>
+              </Stack>
+            </Container>
+          </Box>
+        </Box>
+        <ScrollToTop />
       </WebLayout>
     </>
   );
 };
 
-export const AplicaçãoCompleta: Story = {
-  render: (args) => <LandingPageApp {...args} />,
+export const PaginaInstitucional: Story = {
+  render: (args) => <LandingPage {...args} />,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { UserRound } from 'lucide-react';
 import styles from './Avatar.module.css';
 
-export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 export type AvatarVariant = 'circle' | 'square';
 export type AvatarColor =
   | 'primary'

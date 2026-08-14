@@ -15,59 +15,20 @@ O **document shell** é a casca HTML raiz da aplicação. Ele é responsável po
 
 <div style={{marginBottom: '4rem'}}></div>
 
-## 1. Tokens CSS da casca (customização)
+## 1. Customizando os tokens da casca
 
-Estas variáveis CSS customizam os elementos visuais injetados no nível da raiz da página:
-
-<div style={{marginBottom: '2rem'}}></div>
-
-<table style={{width: '100%'}}>
-  <thead>
-    <tr>
-      <th>Variável CSS</th>
-      <th>Valor padrão (fallback)</th>
-      <th>Descrição</th>
-    </tr>
-  </thead>
-  <tbody>
-  <tr>
-      <td><code>--sinc-header-height</code></td>
-      <td><code>6.4rem</code></td>
-      <td>Altura padrão do cabeçalho (`Header`) da página no Desktop.</td>
-    </tr>
-    <tr>
-      <td><code>--sinc-header-height-mobile</code></td>
-      <td><code>4.8rem</code></td>
-      <td>Altura do cabeçalho no Mobile (usada por componentes internos como a `Sidebar`).</td>
-    </tr>
-    <tr>
-      <td><code>--sinc-page-main-content-link-outline-color</code></td>
-      <td><code>var(--color-gray-200)</code></td>
-      <td>Cor de contorno (<em>outline</em>) do link de acessibilidade `Skip Link` quando focado via teclado.</td>
-    </tr>
-    <tr>
-      <td><code>--sinc-page-overlay-bg</code></td>
-      <td><code>color-mix(in srgb, var(--color-black) 50%, transparent)</code></td>
-      <td>Cor de fundo do overlay escuro global da página.</td>
-    </tr>
-    <tr>
-      <td><code>--sinc-page-overlay-blur</code></td>
-      <td><code>2px</code></td>
-      <td>Intensidade do desfoque (<em>backdrop-filter</em>) aplicado atrás do overlay global.</td>
-    </tr>
-  </tbody>
-</table>
-
-<div style={{marginBottom: '4rem'}}></div>
+A casca utiliza os tokens globais definidos em `@sincroniza/ui` (como `--sinc-header-height`, `--sinc-page-overlay-bg`, `--sinc-page-overlay-blur` e `--sinc-page-main-content-link-outline-color`). Para consultar a lista completa de valores e fallbacks, acesse a documentação de [Design tokens e estilos globais](/docs/fundamentos-design-tokens-e-estilos-globais--docs).
 
 ### Sobrescrevendo no aplicativo
 
-Caso uma aplicação precise alterar a opacidade do overlay ou a cor do desfoque globalmente, adicione as variáveis no `global.css` do seu projeto:
+Caso a sua aplicação precise customizar a aparência do overlay global (opacidade, desfoque) ou a cor do anel de foco do *Skip Link*, basta sobrescrever as variáveis no `:root` do arquivo `global.css` do seu projeto:
 
 ```css
+/* src/styles/global.css do seu aplicativo */
 :root {
   --sinc-page-overlay-bg: rgba(0, 0, 0, 0.7);
   --sinc-page-overlay-blur: 4px;
+  --sinc-page-main-content-link-outline-color: var(--color-primary);
 }
 ```
 

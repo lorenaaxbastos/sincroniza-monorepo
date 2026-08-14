@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Stack.module.css';
 
-export type StackTag = 'div' | 'section' | 'ul' | 'ol' | 'nav' | 'article';
+export type StackTag = 'div' | 'ul' | 'ol' | 'nav';
 export type StackSpacing = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 export type StackDirection =
   'row' | 'column' | 'row-reverse' | 'column-reverse';

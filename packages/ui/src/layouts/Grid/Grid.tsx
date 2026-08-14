@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Grid.module.css';
 
-export type GridTag = 'div' | 'section' | 'ul' | 'ol' | 'nav' | 'article';
+export type GridTag = 'div' | 'ul' | 'ol' | 'nav';
 export type GridSpacing = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 export type GridCols = number | string;
 export type GridAlign = 'start' | 'end' | 'center' | 'stretch';

@@ -1,5 +1,5 @@
 .header {
-  --_bg: var(--sinc-header-bg, var(--color-white));
+  --_bg: var(--sinc-header-bg, var(--color-gray-100));
   --_border: var(
     --sinc-header-border,
     var(--spacing-px) solid var(--color-gray-300)

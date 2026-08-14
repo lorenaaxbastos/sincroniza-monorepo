@@ -63,7 +63,7 @@
 
   --sinc-header-main-height: 6.4rem;
   --sinc-topbar-height: 3.6rem;
-  --sinc-header-main-height-mobile: 4.8rem;
+  --sinc-header-main-height-mobile: 5.8rem;
   --sinc-topbar-height-mobile: 3.2rem;
   --sinc-header-height: var(--sinc-header-main-height);
 
@@ -420,4 +420,10 @@ a {
     color: var(--color-text-link-hover);
     text-decoration: none;
   }
+}
+
+a svg,
+button svg,
+[data-theme-toggle] svg {
+  pointer-events: none;
 }

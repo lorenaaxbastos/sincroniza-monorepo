@@ -1,11 +1,8 @@
 .shell {
-  --_bg-color: var(--sinc-app-layout-bg, var(--color-bg-canvas));
-
   display: flex;
   width: 100vw;
   height: 100dvh;
   overflow: hidden;
-  background-color: var(--_bg-color);
 }
 
 .sidebar {

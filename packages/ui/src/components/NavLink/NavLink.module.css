@@ -79,8 +79,8 @@
     }
 
     &.active {
-      color: var(--_color-active);
-      background-color: var(--sinc-nav-link-bg-active, transparent);
+      color: var(--_color);
+      background-color: var(--sinc-nav-link-bg, transparent);
     }
 
     &::after {
@@ -104,88 +104,56 @@
 
   &.primary {
     --_nav-base-color: var(--color-primary);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-primary),
-      var(--color-gray-900) 20%
-    );
+    --_nav-hover-color: var(--color-primary);
     --_nav-active-bg: var(--color-primary);
     --_nav-active-text-color: var(--color-white);
   }
 
   &.secondary {
     --_nav-base-color: var(--color-secondary);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-secondary),
-      var(--color-gray-900) 20%
-    );
+    --_nav-hover-color: var(--color-secondary);
     --_nav-active-bg: var(--color-secondary);
     --_nav-active-text-color: var(--color-white);
   }
 
   &.tertiary {
     --_nav-base-color: var(--color-tertiary);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-tertiary),
-      var(--color-gray-900) 20%
-    );
+    --_nav-hover-color: var(--color-tertiary);
     --_nav-active-bg: var(--color-tertiary);
     --_nav-active-text-color: var(--color-white);
   }
 
   &.quaternary {
     --_nav-base-color: var(--color-quaternary);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-quaternary),
-      var(--color-gray-900) 20%
-    );
+    --_nav-hover-color: var(--color-quaternary);
     --_nav-active-bg: var(--color-quaternary);
     --_nav-active-text-color: var(--color-white);
   }
 
   &.light {
     --_nav-base-color: var(--color-gray-100);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-gray-100),
-      var(--color-gray-900) 20%
-    );
+    --_nav-hover-color: var(--color-gray-100);
     --_nav-active-bg: var(--color-gray-100);
     --_nav-active-text-color: var(--color-gray-900);
   }
 
   &.dark {
     --_nav-base-color: var(--color-gray-900);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-gray-900),
-      var(--color-gray-100) 20%
-    );
+    --_nav-hover-color: var(--color-gray-900);
     --_nav-active-bg: var(--color-gray-900);
     --_nav-active-text-color: var(--color-gray-100);
   }
 
   &.white {
     --_nav-base-color: var(--color-white);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-white),
-      var(--color-black) 20%
-    );
+    --_nav-hover-color: var(--color-white);
     --_nav-active-bg: var(--color-white);
     --_nav-active-text-color: var(--color-black);
   }
 
   &.black {
     --_nav-base-color: var(--color-black);
-    --_nav-hover-color: color-mix(
-      in srgb,
-      var(--color-black),
-      var(--color-white) 20%
-    );
+    --_nav-hover-color: var(--color-black);
     --_nav-active-bg: var(--color-black);
     --_nav-active-text-color: var(--color-white);
   }
@@ -193,8 +161,8 @@
   &.surface {
     --_nav-base-color: var(--color-gray-600);
     --_nav-hover-color: var(--color-gray-900);
-    --_nav-active-bg: var(--color-primary);
-    --_nav-active-text-color: var(--color-white);
+    --_nav-active-bg: var(--color-gray-600);
+    --_nav-active-text-color: var(--color-gray-200);
   }
 }
 

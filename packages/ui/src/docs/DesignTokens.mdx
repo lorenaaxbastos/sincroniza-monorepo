@@ -85,7 +85,7 @@ As variantes `-light` e `-dark` têm suas cores invertidas no tema `dark`.
       <td style={{textAlign: 'center'}}><code style={{backgroundColor: '#0288d1', color: '#fff'}}>#0288d1</code></td>
       <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #0288d1, #fff 75%)', color: '#000'}}>color-mix(75% branco)</code></td>
       <td style={{textAlign: 'center'}}><code style={{backgroundColor: 'color-mix(in srgb, #0288d1, #000 50%)', color: '#fff'}}>color-mix(50% preto)</code></td>
-      <td>Informaçoes neutras, tooltips e anéis de foco de acessibilidade.</td>
+      <td>Informações neutras, tooltips e anéis de foco de acessibilidade.</td>
     </tr>
   </tbody>
 </table>
@@ -554,9 +554,9 @@ Controle de sobreposição de elementos para evitar conflitos de empilhamento no
 
 <div style={{marginBottom: '6rem'}}></div>
 
-## 6. Tokens globais de painel e layout (`--sinc-layout-panel-*` / `--sinc-header-*`)
+## 6. Tokens globais
 
-Variáveis que padronizam as alturas da navegação e o comportamento de layouts flutuantes (como `Sidebar` e `Header`).
+Variáveis que padronizam as alturas da navegação, o comportamento de layouts flutuantes (como `Sidebar` e `Header`) e a cor da outline do Skip Link.
 
 <div style={{marginBottom: '2rem'}}></div>
 
@@ -571,28 +571,53 @@ Variáveis que padronizam as alturas da navegação e o comportamento de layouts
   <tbody>
     <tr>
       <td><code>--sinc-header-main-height</code></td>
-      <td style={{textAlign: 'center'}}><code>6.4rem</code> (4.8rem mobile)</td>
-      <td>Altura base do cabeçalho principal no desktop e mobile.</td>
+      <td style={{textAlign: 'center'}}><code>6.4rem</code> (Desktop)</td>
+      <td>Altura base do cabeçalho principal no Desktop.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-header-main-height-mobile</code></td>
+      <td style={{textAlign: 'center'}}><code>5.8rem</code> (Mobile)</td>
+      <td>Altura base do cabeçalho principal em telas móveis (≤ 48em).</td>
     </tr>
     <tr>
       <td><code>--sinc-topbar-height</code></td>
-      <td style={{textAlign: 'center'}}><code>3.6rem</code> (3.2rem mobile)</td>
-      <td>Altura da faixa de avisos/ações superiores (Topbar).</td>
+      <td style={{textAlign: 'center'}}><code>3.6rem</code> (Desktop)</td>
+      <td>Altura da faixa de avisos/ações superiores (Topbar) no Desktop.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-topbar-height-mobile</code></td>
+      <td style={{textAlign: 'center'}}><code>3.2rem</code> (Mobile)</td>
+      <td>Altura da faixa de avisos/ações superiores (Topbar) em telas móveis (≤ 48em).</td>
     </tr>
     <tr>
       <td><code>--sinc-header-height</code></td>
       <td style={{textAlign: 'center'}}><em>Dinâmico via CSS</em></td>
-      <td>Calculado automaticamente. É consumido por toda a aplicação para compensação de scroll e eixos virtuais.</td>
+      <td>Calculado automaticamente somando Header + Topbar em tempo real. Usado em <code>scroll-padding-top</code> e eixos virtuais.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-page-overlay-bg</code></td>
+      <td style={{textAlign: 'center'}}><code>color-mix(black 50%)</code></td>
+      <td>Cor/opacidade de fundo da máscara escura global. Pode ser sobrescrita localmente.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-page-overlay-blur</code></td>
+      <td style={{textAlign: 'center'}}><code>2px</code></td>
+      <td>Intensidade do desfoque (backdrop-blur) aplicado ao fundo quando modais/drawers abrem.</td>
     </tr>
     <tr>
       <td><code>--sinc-layout-panel-margin</code></td>
       <td style={{textAlign: 'center'}}><code>0rem</code></td>
-      <td>Margem externa padrão para painéis soltos/flutuantes (ex: Sidebar com respiro).</td>
+      <td>Margem externa padrão para painéis flutuantes (ex: Sidebar com respiro).</td>
     </tr>
     <tr>
       <td><code>--sinc-layout-panel-border-radius</code></td>
       <td style={{textAlign: 'center'}}><code>none</code></td>
       <td>Arredondamento padrão para contêineres e painéis de layout.</td>
+    </tr>
+    <tr>
+      <td><code>--sinc-page-main-content-link-outline-color</code></td>
+      <td style={{textAlign: 'center'}}><code>var(--color-gray-200)</code></td>
+      <td>Cor do outline do Skip Link.</td>
     </tr>
   </tbody>
 </table>
@@ -634,7 +659,7 @@ Variáveis que padronizam as alturas da navegação e o comportamento de layouts
 
 ## 8. Utilitários e classes globais
 
-<div style={{marginBottom: '2rem'}}></div>
+<div style={{marginBottom: '2rem'}}></div>  
 
 ### Acessibilidade (`.sinc-sr-only`)
 
@@ -650,6 +675,19 @@ Com o modificador `--focusable` (usado no `Skip Link` de acessibilidade), o elem
 <a href="#main-content" class="sinc-sr-only --focusable">
   Pular para o conteúdo principal
 </a>
+```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+### Máscara de sobreposição global (`.sinc-global-overlay`)
+
+Elemento injetado na raiz do documento para criar o efeito de escurecimento/blur atrás de modais, drawers e menus popover:
+
+* **Desativação de ponteiro:** Por padrão possui `pointer-events: none` e `opacity: 0`.
+* **Ativação automática:** Quando qualquer elemento com `data-overlay` tem seu `data-state` alterado para `open`, o CSS `:root:has()` ativa a opacidade para `1` e libera os cliques (`pointer-events: auto`).
+
+```html
+<div class="sinc-global-overlay" data-global-overlay aria-hidden="true"></div>
 ```
 
 <div style={{marginBottom: '6rem'}}></div>
@@ -714,6 +752,20 @@ Remove as marcas de ponto (bullet points) e numerações nativas de listas, mant
 ul,
 ol {
   list-style: none;
+}
+```
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Desativação de eventos de ponteiro em SVGs interativos
+
+Para evitar que cliques em ícones internos interrompam a propagação de eventos (`e.target`) ou cancelem animações de alternância (ex: botão de alternar tema trocando Sol por Lua), todos os SVGs dentro de links e botões possuem captura de ponteiro desativada por padrão:
+
+```css
+a svg,
+button svg,
+[data-theme-toggle] svg {
+  pointer-events: none;
 }
 ```
 

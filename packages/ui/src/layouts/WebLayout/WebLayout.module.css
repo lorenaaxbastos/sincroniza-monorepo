@@ -1,10 +1,7 @@
 .shell {
-  --_bg-color: var(--sinc-web-layout-bg, var(--color-bg-canvas));
-
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--_bg-color);
 }
 
 .header {
