@@ -21,7 +21,8 @@
     color var(--transition-base),
     text-decoration-color var(--transition-base);
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     color: var(--_color-hover);
   }
 
@@ -153,7 +154,8 @@
     text-decoration-line: none;
     text-underline-offset: 3px;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       text-decoration-line: underline;
     }
   }
@@ -189,7 +191,8 @@
       opacity var(--transition-base, 0.2s ease);
   }
 
-  &:hover .externalIcon {
+  &:hover .externalIcon,
+  &:focus-visible .externalIcon {
     transform: translate(2px, -2px);
     opacity: 1;
   }

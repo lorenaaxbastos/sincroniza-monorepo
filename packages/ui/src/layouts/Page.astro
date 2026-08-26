@@ -1,6 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { ScrollToTop } from '@/components/ScrollToTop';
+import { ToastProvider } from '@/components/Toast';
 import '../styles/global.css';
 
 interface Props extends HTMLAttributes<'html'> {
@@ -14,6 +15,7 @@ interface Props extends HTMLAttributes<'html'> {
   googleAnalyticsId?: string;
   handTalkToken?: string;
   hasScrollToTop?: boolean;
+  hasToast?: boolean;
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   theme = 'light',
   handTalkToken,
   hasScrollToTop = true,
+  hasToast = true,
   ...rest
 } = Astro.props;
 ---
@@ -101,9 +104,19 @@ const {
       >Pular para o conteúdo principal</a
     >
 
-    <div id="app-root">
-      <slot />
-    </div>
+    {
+      hasToast ? (
+        <ToastProvider client:only="react">
+          <div id="app-root">
+            <slot />
+          </div>
+        </ToastProvider>
+      ) : (
+        <div id="app-root">
+          <slot />
+        </div>
+      )
+    }
 
     {hasScrollToTop && <ScrollToTop />}
 

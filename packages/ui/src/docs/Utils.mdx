@@ -238,3 +238,48 @@ const attrsExterno = getLinkAttributes('[https://google.com](https://google.com)
 const attrsInterno = getLinkAttributes('/dashboard');
 // Retorna: { target: undefined, rel: undefined }
 ```
+
+<div style={{marginBottom: '6rem'}}></div>
+
+## 4. Concatenação de classes CSS (`cx.ts`)
+
+Disponível via `import { cx } from '@sincroniza/ui/utils/cx'`.
+
+Utilitário leve para combinação condicional de classes CSS em componentes React.
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Resumo das Funções
+
+<table style={{width: '100%'}}>
+  <thead>
+    <tr>
+      <th>Função</th>
+      <th>Assinatura</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>cx</code></td>
+      <td><code>(...classes: ClassValue[]) =&gt; string</code></td>
+      <td>Filtra valores falsos (<code>undefined</code>, <code>null</code>, <code>false</code>, <code>""</code>) e une as classes válidas com espaço.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style={{marginBottom: '4rem'}}></div>
+
+### Exemplo prático de uso
+
+```typescript
+import { cx } from '@sincroniza/ui/utils/cx';
+
+const className = cx(
+  'sinc-card',
+  isActive && 'is-active',
+  isDisabled ? 'is-disabled' : 'is-enabled',
+  customClassName
+);
+// Resultado se isActive=true e isDisabled=false: "sinc-card is-active is-enabled custom-class"
+```

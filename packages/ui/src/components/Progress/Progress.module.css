@@ -1,0 +1,154 @@
+.container {
+  --_progress-height: var(--sinc-progress-height, 0.8rem);
+  --_progress-color: var(--sinc-progress-color, var(--color-primary));
+  --_progress-radius: var(--sinc-progress-radius, var(--radii-pill));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.valueLabel {
+  font-family: monospace;
+  color: var(--color-gray-600);
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: var(--_progress-height);
+  background-color: var(--color-gray-200);
+  border-radius: var(--_progress-radius);
+  overflow: hidden;
+}
+
+.indicator {
+  height: 100%;
+  background-color: var(--_progress-color);
+  border-radius: inherit;
+  transition: width var(--transition-smooth);
+}
+
+.isIndeterminate .indicator {
+  width: 40% !important;
+  position: absolute;
+  animation: progressIndeterminate 1.5s infinite ease-in-out;
+}
+
+.segmentedTrack {
+  display: flex;
+  gap: var(--spacing-2, 0.8rem);
+  width: 100%;
+}
+
+.segment {
+  flex: 1;
+  height: var(--_progress-height);
+  background-color: var(--color-gray-200);
+  border-radius: var(--_progress-radius, var(--radii-sm, 0.4rem));
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.segmentActive {
+  background-color: var(--_progress-color);
+}
+
+.size-sm {
+  --_progress-height: var(--sinc-progress-height, 0.4rem);
+}
+
+.size-md {
+  --_progress-height: var(--sinc-progress-height, 0.8rem);
+}
+
+.size-lg {
+  --_progress-height: var(--sinc-progress-height, 1.2rem);
+}
+
+.color-primary {
+  --_progress-color: var(--color-primary);
+}
+
+.color-secondary {
+  --_progress-color: var(--color-secondary);
+}
+
+.color-tertiary {
+  --_progress-color: var(--color-tertiary);
+}
+
+.color-quaternary {
+  --_progress-color: var(--color-quaternary);
+}
+
+.color-success {
+  --_progress-color: var(--color-feedback-success);
+}
+
+.color-warning {
+  --_progress-color: var(--color-feedback-warning);
+}
+
+.color-error {
+  --_progress-color: var(--color-feedback-error);
+}
+
+.color-info {
+  --_progress-color: var(--color-feedback-info);
+}
+
+.color-light {
+  --_progress-color: var(--color-gray-100);
+
+  .track {
+    background-color: var(--color-gray-700);
+  }
+}
+
+.color-dark {
+  --_progress-color: var(--color-gray-900);
+}
+
+.color-white {
+  --_progress-color: var(--color-white);
+
+  .track {
+    background-color: var(--color-gray-700);
+  }
+}
+
+.color-black {
+  --_progress-color: var(--color-black);
+}
+
+.color-surface {
+  --_progress-color: var(--color-gray-500);
+}
+
+@keyframes progressIndeterminate {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
+}
