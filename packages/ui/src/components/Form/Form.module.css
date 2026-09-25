@@ -1,0 +1,50 @@
+.root {
+  --_gap: var(--sinc-form-gap, var(--spacing-6));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--_gap);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gap-xs {
+  --_gap: var(--spacing-1);
+}
+
+.gap-sm {
+  --_gap: var(--spacing-2);
+}
+
+.gap-md {
+  --_gap: var(--spacing-4);
+}
+
+.gap-lg {
+  --_gap: var(--spacing-6);
+}
+
+.gap-xl {
+  --_gap: var(--spacing-8);
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.fieldset:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.legend {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-4);
+  padding: 0;
+}

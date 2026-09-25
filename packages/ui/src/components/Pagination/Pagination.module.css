@@ -25,6 +25,15 @@
   min-width: var(--_size);
   height: var(--_size);
   line-height: 1;
+
+  &:not([aria-current='page']) {
+    --sinc-btn-color: var(--sinc-pagination-btn-color);
+  }
+
+  &[aria-current='page'] {
+    --sinc-btn-bg: var(--sinc-pagination-active-bg);
+    --sinc-btn-color: var(--sinc-pagination-active-color);
+  }
 }
 
 .sm {

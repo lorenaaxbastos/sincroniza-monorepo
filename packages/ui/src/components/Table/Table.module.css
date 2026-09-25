@@ -1,0 +1,277 @@
+.container {
+  --_radius: var(--sinc-table-radius, var(--radii-md));
+  --_header-text: var(--sinc-table-header-text, var(--color-white));
+  --_header-bg: var(--sinc-table-header-bg, var(--color-primary));
+  --_border-color: var(--sinc-table-border-color, var(--color-gray-200));
+  --_border-width: var(--sinc-table-border-width, var(--spacing-px));
+  --_hover-bg: var(--sinc-table-hover-bg, var(--color-gray-200));
+  --_highlight-text: var(--sinc-table-highlight-text, var(--color-white));
+  --_highlight-bg: var(--sinc-table-highlight-bg, var(--color-secondary));
+  --_padding-x: var(--sinc-table-padding-x, var(--spacing-4));
+  --_padding-y: var(--sinc-table-padding-y, var(--spacing-3));
+  --_text: var(--sinc-table-text, var(--color-text));
+  --_bg: var(--sinc-table-bg, var(--color-white));
+  --_striped-bg: var(--sinc-table-row-even-bg, var(--color-primary-light));
+
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text, var(--color-gray-900));
+}
+
+.fixed {
+  table-layout: fixed;
+}
+
+.sm {
+  --_padding-x: var(--sinc-table-padding-x, var(--spacing-2));
+  --_padding-y: var(--sinc-table-padding-y, var(--spacing-2));
+}
+
+.md {
+  --_padding-x: var(--sinc-table-padding-x, var(--spacing-4));
+  --_padding-y: var(--sinc-table-padding-y, var(--spacing-3));
+}
+
+.lg {
+  --_padding-x: var(--sinc-table-padding-x, var(--spacing-5));
+  --_padding-y: var(--sinc-table-padding-y, var(--spacing-4));
+}
+
+.header th {
+  color: var(--_header-text);
+  background-color: var(--_header-bg);
+  font-weight: var(--font-weight-semibold);
+  border-bottom: var(--_border-width) solid var(--_border-color);
+  user-select: none;
+}
+
+.header th:first-child {
+  border-top-left-radius: var(--_radius);
+
+  @media (max-width: 36em) {
+    --_radius: 0;
+  }
+}
+
+.header th:last-child {
+  border-top-right-radius: var(--_radius);
+
+  @media (max-width: 36em) {
+    --_radius: 0;
+  }
+}
+
+.cell {
+  color: var(--_text);
+  background-color: var(--_bg);
+  padding: var(--_padding-y) var(--_padding-x);
+  border-bottom: var(--_border-width) solid var(--_border-color);
+  vertical-align: middle;
+  transition: background-color var(--transition-base);
+}
+
+.row:last-child td:first-child {
+  border-bottom-left-radius: var(--_radius);
+
+  @media (max-width: 36em) {
+    --_radius: 0;
+  }
+}
+
+.row:last-child td:last-child {
+  border-bottom-right-radius: var(--_radius);
+
+  @media (max-width: 36em) {
+    --_radius: 0;
+  }
+}
+
+.cellTruncate {
+  max-width: 20rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.headerCellContent {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-2);
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  background: transparent;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--radii-xs);
+}
+
+.sortButton:focus-visible {
+  outline-offset: 2px;
+}
+
+.filterWrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.default tbody .row:last-child .cell {
+  border-bottom: none;
+}
+
+.striped tbody .row:nth-child(even) .cell {
+  background-color: var(--_striped-bg);
+}
+
+.bordered .cell {
+  border-right: var(--_border-width) solid var(--_border-color);
+}
+
+.bordered .cell:last-child {
+  border-right: none;
+}
+
+.ghost .cell {
+  border-bottom: none;
+}
+
+.hoverable tbody .row:hover .cell {
+  background-color: var(--_hover-bg);
+
+  @media (max-width: 36em) {
+    --_hover-bg: var(--color-white);
+  }
+}
+
+.rowHighlighted .cell {
+  color: var(--_highlight-text) !important;
+  background-color: var(--_highlight-bg) !important;
+
+  &::before {
+    color: var(--_highlight-text) !important;
+  }
+}
+
+.stickyHeader .header th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-top: var(--_border-width) solid var(--_border-color);
+  background-color: var(--color-white);
+}
+
+.summaryWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.summary {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+}
+
+.paginationWrapper {
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 36em) {
+  .stackedContainer {
+    overflow-x: visible;
+  }
+
+  .stackedTable,
+  .stackedTable thead,
+  .stackedTable tbody,
+  .stackedTable tr,
+  .stackedTable th,
+  .stackedTable td {
+    display: block;
+  }
+
+  .stackedTable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .stackedTable tbody .row {
+    margin-bottom: var(--spacing-3);
+    border: var(--_border-width) solid var(--_border-color);
+    border-radius: var(--_radius);
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .stackedTable.striped tbody .row:nth-child(even) {
+    background-color: var(--color-white);
+  }
+
+  .stackedTable.striped tbody .row:nth-child(even) .cell {
+    background-color: var(--color-white);
+  }
+
+  .stackedTable tbody .row .cell,
+  .stackedTable.default tbody .row:last-child .cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: right;
+    border-bottom: 1px solid var(--_border-color);
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .stackedTable tbody .row .cell:last-child,
+  .stackedTable.default tbody .row:last-child .cell:last-child {
+    border-bottom: none;
+  }
+
+  .stackedTable .cell::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-600);
+    text-align: left;
+    padding-right: var(--spacing-2);
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-3);
+  }
+
+  .summaryWrapper {
+    display: none;
+  }
+}

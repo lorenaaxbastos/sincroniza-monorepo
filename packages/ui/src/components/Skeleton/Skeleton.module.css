@@ -1,0 +1,86 @@
+.root {
+  --_bg: var(--sinc-skeleton-bg, var(--color-gray-200));
+  --_highlight: var(--sinc-skeleton-highlight, var(--color-gray-100));
+  --_radius: var(--sinc-skeleton-radius, var(--radii-lg));
+  --_duration: var(--sinc-skeleton-duration, 1.5s);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: 100%;
+  max-width: 100%;
+}
+
+.skeleton {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: var(--_bg);
+}
+
+.pulse {
+  animation: pulse var(--_duration) ease-in-out infinite;
+}
+
+.wave {
+  background: linear-gradient(
+    90deg,
+    var(--_bg) 0%,
+    var(--_highlight) 50%,
+    var(--_bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: wave var(--_duration) linear infinite;
+}
+
+.text {
+  height: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: var(--radii-sm);
+}
+
+.circular {
+  border-radius: var(--radii-pill);
+}
+
+.rectangular {
+  border-radius: 0;
+}
+
+.rounded {
+  border-radius: var(--_radius);
+}
+
+.loadedContent {
+  animation: fadeIn var(--transition-base);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes wave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

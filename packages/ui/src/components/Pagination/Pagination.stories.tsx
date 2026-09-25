@@ -89,6 +89,21 @@ const meta: Meta<PaginationStoryProps> = {
       description: 'Tamanho dos botões da paginação',
       table: { category: 'Variáveis CSS' },
     },
+    '--sinc-pagination-btn-color': {
+      control: 'color',
+      description: 'Cor do texto e ícones dos botões inativos e setas',
+      table: { category: 'Variáveis CSS' },
+    },
+    '--sinc-pagination-active-bg': {
+      control: 'color',
+      description: 'Cor de fundo do botão da página ativa',
+      table: { category: 'Variáveis CSS' },
+    },
+    '--sinc-pagination-active-color': {
+      control: 'color',
+      description: 'Cor do texto do botão da página ativa',
+      table: { category: 'Variáveis CSS' },
+    },
   },
 };
 
